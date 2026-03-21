@@ -1,2 +1,2 @@
-// Re-export the Base44 client from the renamed XTOX client file.
+// Re-export the local mock client
 export { base44 } from './XTOXClient';
