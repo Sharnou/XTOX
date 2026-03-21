@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, MessageSquare, Heart, Globe, Menu, X } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { useUserCountry } from "@/hooks/useUserCountry";
-import { useState as useTranslateState } from "react";
 
 const COUNTRIES = ["Egypt", "UAE", "Saudi Arabia", "Kuwait", "Qatar", "Bahrain", "Oman", "Jordan", "Morocco", "USA", "UK", "France", "Germany", "Canada", "Australia"];
 
@@ -17,11 +16,41 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isAdmin = user?.role === "admin";
   const displayCountry = selectedCountry || autoCountry || "Your region";
-  const [lang, setLang] = useTranslateState(() => {
-    if (autoCountry === "Germany") return "Deutsch";
-    if (autoCountry === "Egypt" || autoCountry === "Saudi Arabia" || autoCountry === "UAE") return "عربي";
-    return "English";
-  });
+  const [lang, setLang] = useState("English");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("xtox_lang");
+    if (saved) {
+      applyLang(saved);
+      setLang(saved);
+    } else if (autoCountry === "Germany") {
+      applyLang("Deutsch");
+      setLang("Deutsch");
+    } else if (["Egypt", "Saudi Arabia", "UAE", "Kuwait", "Qatar", "Bahrain", "Oman", "Jordan", "Morocco"].includes(autoCountry)) {
+      applyLang("عربي");
+      setLang("عربي");
+    }
+  }, [autoCountry]);
+
+  const applyLang = (label) => {
+    if (label === "عربي") {
+      document.documentElement.lang = "ar";
+      document.documentElement.dir = "rtl";
+    } else if (label === "Deutsch") {
+      document.documentElement.lang = "de";
+      document.documentElement.dir = "ltr";
+    } else {
+      document.documentElement.lang = "en";
+      document.documentElement.dir = "ltr";
+    }
+    localStorage.setItem("xtox_lang", label);
+  };
+
+  const cycleLang = () => {
+    const next = lang === "English" ? (autoCountry === "Germany" ? "Deutsch" : "عربي") : "English";
+    setLang(next);
+    applyLang(next);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -73,7 +102,7 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
 
         <div className="flex items-center gap-2 ml-auto">
           <button
-            onClick={() => setLang(l => l === "English" ? (autoCountry === "Germany" ? "Deutsch" : "عربي") : "English")}
+            onClick={cycleLang}
             className="hidden md:flex text-xs bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition-colors"
             title="Translate"
           >
