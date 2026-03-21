@@ -5,6 +5,7 @@ import XTOXFooter from "@/components/layout/XTOXFooter";
 import AdsGrid from "@/components/ads/AdsGrid";
 import { SlidersHorizontal, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useUserCountry } from "@/hooks/useUserCountry";
 
 const CATEGORIES = [
   { value: "", label: "All" },
@@ -32,7 +33,7 @@ export default function Search() {
   const navigate = useNavigate();
   const [ads, setAds] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [country, setCountry] = useState("");
+  const { country: lockedCountry } = useUserCountry();
   const [city, setCity] = useState("");
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("-created_date");
@@ -51,12 +52,12 @@ export default function Search() {
 
   useEffect(() => {
     loadAds();
-  }, [country, category, sortBy, city]);
+  }, [lockedCountry, category, sortBy, city]);
 
   const loadAds = async () => {
     setLoading(true);
     const filter = { status: "active" };
-    if (country) filter.country = country;
+    if (lockedCountry) filter.country = lockedCountry;
     if (city) filter.city = city;
     if (category) filter.category = category;
     if (featuredParam) filter.is_featured = true;
@@ -77,7 +78,7 @@ export default function Search() {
 
   return (
     <div className="min-h-screen bg-background font-inter">
-      <XTOXHeader selectedCountry={country} onCountryChange={setCountry} />
+      <XTOXHeader selectedCountry={lockedCountry} onCountryChange={() => {}} />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm mb-4 transition-colors">

@@ -9,12 +9,17 @@ import AdsGrid from "@/components/ads/AdsGrid";
 import { Link } from "react-router-dom";
 import { Star, ArrowRight } from "lucide-react";
 import AIAssistant from "@/components/ai/AIAssistant";
-import AICountryDetector from "@/components/ai/AICountryDetector";
+import { useUserCountry } from "@/hooks/useUserCountry";
 
 export default function Home() {
+  const { country: detectedCountry } = useUserCountry();
   const [country, setCountry] = useState("");
   const [featuredAds, setFeaturedAds] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (detectedCountry && !country) setCountry(detectedCountry);
+  }, [detectedCountry]);
 
   useEffect(() => {
     loadAds();
@@ -35,7 +40,6 @@ export default function Home() {
     <div className="min-h-screen bg-background font-inter">
       <XTOXHeader selectedCountry={country} onCountryChange={setCountry} />
 
-      <AICountryDetector onDetected={setCountry} />
       <CelebrationBanner country={country} />
       <HeroBanner />
       <CategoryGrid />

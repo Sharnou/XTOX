@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, MessageSquare, Heart, ChevronDown, Globe, Menu, X } from "lucide-react";
+import { Search, MessageSquare, Heart, Globe, Menu, X } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import NotificationBell from "@/components/notifications/NotificationBell";
+import { useUserCountry } from "@/hooks/useUserCountry";
 
 const COUNTRIES = ["Egypt", "UAE", "Saudi Arabia", "Kuwait", "Qatar", "Bahrain", "Oman", "Jordan", "Morocco", "USA", "UK", "France", "Germany", "Canada", "Australia"];
 
 export default function XTOXHeader({ selectedCountry, onCountryChange }) {
   const { user } = useAuth();
+  const { country: autoCountry } = useUserCountry();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [countryDropdown, setCountryDropdown] = useState(false);
+  const isAdmin = user?.role === "admin";
+  const displayCountry = selectedCountry || autoCountry || "Your region";
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -23,9 +26,7 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
 
   return (
     <header className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50">
-      {/* Top bar */}
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-        {/* Logo */}
         <Link to="/" className="flex-shrink-0 flex items-center gap-2">
           <div className="text-2xl font-black tracking-tight leading-none">
             <span className="text-secondary">▲</span>
@@ -33,33 +34,24 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
           </div>
         </Link>
 
-        {/* Country Selector */}
+        {/* Region (admin can change, users locked) */}
         <div className="relative hidden md:block">
-          <button
-            onClick={() => setCountryDropdown(!countryDropdown)}
-            className="flex items-center gap-1 text-sm bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition-colors"
-          >
-            <Globe className="w-4 h-4" />
-            <span>{selectedCountry || "Global"}</span>
-            <ChevronDown className="w-3 h-3" />
-          </button>
-          {countryDropdown && (
-            <div className="absolute top-full left-0 mt-1 bg-white text-foreground rounded-xl shadow-2xl border border-border w-48 py-2 z-50">
-              {/* Only show "All Countries" for admins — regular users are locked to region */}
-              {COUNTRIES.map(c => (
-                <div
-                  key={c}
-                  className="px-4 py-2 hover:bg-muted cursor-pointer text-sm"
-                  onClick={() => { onCountryChange(c); setCountryDropdown(false); }}
-                >
-                  {c}
-                </div>
-              ))}
+          {isAdmin ? (
+            <select
+              value={displayCountry}
+              onChange={e => onCountryChange?.(e.target.value)}
+              className="text-sm bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition-colors text-primary-foreground"
+            >
+              {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          ) : (
+            <div className="flex items-center gap-2 text-sm text-primary-foreground/80 bg-white/10 px-3 py-2 rounded-lg">
+              <Globe className="w-4 h-4" />
+              <span>{displayCountry}</span>
             </div>
           )}
         </div>
 
-        {/* Search Bar */}
         <form onSubmit={handleSearch} className="flex-1 max-w-xl">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -73,7 +65,6 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
           </div>
         </form>
 
-        {/* Right Actions */}
         <div className="flex items-center gap-2 ml-auto">
           {user ? (
             <>
@@ -117,62 +108,6 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
           </button>
         </div>
       </div>
-
-      {/* Category Nav Bar */}
-      <div className="bg-primary/80 border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto scrollbar-hide py-1">
-          {[
-            { label: "🚗 Vehicles", path: "/Vehicles" },
-            { label: "📱 Electronics", path: "/Electronics" },
-            { label: "🏠 Real Estate", path: "/RealEstate" },
-            { label: "💼 Jobs", path: "/Search?category=jobs" },
-            { label: "🐾 Pets", path: "/Search?category=pets" },
-            { label: "🔧 Services", path: "/Search?category=services" },
-            { label: "🛋 Furniture", path: "/Search?category=furniture" },
-            { label: "👗 Fashion", path: "/Search?category=fashion" },
-            { label: "⚽ Sports", path: "/Search?category=sports" },
-            { label: "📚 Books", path: "/Search?category=books" },
-            { label: "📦 Other", path: "/Search?category=other" },
-          ].map(item => (
-            <Link
-              key={item.label}
-              to={item.path}
-              className="text-xs font-medium text-primary-foreground/80 hover:text-secondary whitespace-nowrap px-3 py-2 rounded-lg hover:bg-white/10 transition-all"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-primary/95 border-t border-white/10 px-4 py-3 flex flex-col gap-2">
-          {user ? (
-            <>
-              <Link to="/Dashboard" className="py-2 text-sm hover:text-secondary" onClick={() => setMobileMenuOpen(false)}>My Dashboard</Link>
-              <Link to="/Favorites" className="py-2 text-sm hover:text-secondary" onClick={() => setMobileMenuOpen(false)}>Favorites</Link>
-              <Link to="/Messages" className="py-2 text-sm hover:text-secondary" onClick={() => setMobileMenuOpen(false)}>Messages</Link>
-            </>
-          ) : (
-            <button onClick={() => base44.auth.redirectToLogin()} className="text-left py-2 text-sm hover:text-secondary">Login / Register</button>
-          )}
-          <div className="border-t border-white/10 pt-2 mt-1">
-            <p className="text-xs text-primary-foreground/60 mb-2">Select Country</p>
-            <div className="flex flex-wrap gap-2">
-              {COUNTRIES.slice(0, 6).map(c => (
-                <button
-                  key={c}
-                  onClick={() => { onCountryChange(c); setMobileMenuOpen(false); }}
-                  className={`text-xs px-3 py-1 rounded-full border border-white/20 ${selectedCountry === c ? "bg-secondary text-secondary-foreground" : "hover:bg-white/10"}`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 }
