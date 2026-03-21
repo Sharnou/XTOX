@@ -1,0 +1,32 @@
+{
+  "name": "SellerReview",
+  "type": "object",
+  "properties": {
+    "seller_email": {
+      "type": "string",
+      "description": "Email of the seller being reviewed"
+    },
+    "reviewer_email": {
+      "type": "string",
+      "description": "Email of the reviewer"
+    },
+    "ad_id": {
+      "type": "string",
+      "description": "The ad this review is about"
+    },
+    "stars": {
+      "type": "number",
+      "description": "Star rating 0-5"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Review comment text"
+    }
+  },
+  "required": [
+    "seller_email",
+    "reviewer_email",
+    "ad_id",
+    "stars"
+  ]
+}
