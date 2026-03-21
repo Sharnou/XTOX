@@ -1,22 +1,39 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Bell } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
-// Minimal, non-recursive notification bell that works with the local mock backend.
+// Simple polling bell with audible chime on new notifications.
+const CHIME_SRC =
+  "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="; // tiny silent placeholder
+
 export default function NotificationBell() {
   const [count, setCount] = useState(0);
+  const prevCount = useRef(0);
+  const audioRef = useRef(typeof Audio !== "undefined" ? new Audio(CHIME_SRC) : null);
 
   useEffect(() => {
-    let active = true;
-    (async () => {
+    let mounted = true;
+    const poll = async () => {
       try {
         const notifications = await base44.entities.Notification.list("-created_date", 10);
-        if (active) setCount(notifications.length);
+        if (!mounted) return;
+        const nextCount = notifications.length;
+        if (nextCount > prevCount.current && audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(() => {}); // ignore autoplay block
+        }
+        prevCount.current = nextCount;
+        setCount(nextCount);
       } catch {
-        /* ignore in mock mode */
+        /* ignore errors in mock mode */
       }
-    })();
-    return () => { active = false; };
+    };
+    poll();
+    const interval = setInterval(poll, 15000); // 15s poll
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   return (
