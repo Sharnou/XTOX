@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
-import { X, Send, Mic, MicOff, Image, Phone, Loader2, MessageSquare } from "lucide-react";
+import { X, Send, Mic, MicOff, Image, Phone, Loader2, MessageSquare, Play } from "lucide-react";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 
 export default function AdChatWindow({ ad, onClose }) {
@@ -12,6 +12,8 @@ export default function AdChatWindow({ ad, onClose }) {
   const [listening, setListening] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [inCall, setInCall] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
   const bottomRef = useRef(null);
   const fileRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -31,7 +33,7 @@ export default function AdChatWindow({ ad, onClose }) {
       id: m.id,
       from: m.sender_email === user.email ? "me" : "them",
       content: m.content,
-      type: m.content?.startsWith("http") ? "image" : "text",
+      type: m.type || (m.content?.startsWith("data:audio") ? "audio" : m.content?.startsWith("http") ? "image" : "text"),
       time: new Date(m.created_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     })));
   };
@@ -47,6 +49,7 @@ export default function AdChatWindow({ ad, onClose }) {
       sender_email: user.email,
       receiver_email: ad.created_by,
       content: text,
+      type,
       is_read: false,
     });
     setInput("");
@@ -60,6 +63,35 @@ export default function AdChatWindow({ ad, onClose }) {
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     await sendMsg(file_url, "image");
     setUploading(false);
+  };
+
+  const toggleVoiceMessage = async () => {
+    if (recording) {
+      mediaRecorderRef.current?.stop();
+      return;
+    }
+    if (!navigator.mediaDevices?.getUserMedia) {
+      alert("Voice recording not supported");
+      return;
+    }
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const recorder = new MediaRecorder(stream);
+    const chunks = [];
+    recorder.ondataavailable = e => chunks.push(e.data);
+    recorder.onstop = async () => {
+      const blob = new Blob(chunks, { type: "audio/webm" });
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const dataUrl = reader.result.toString();
+        await sendMsg(dataUrl, "audio");
+      };
+      reader.readAsDataURL(blob);
+      stream.getTracks().forEach(t => t.stop());
+      setRecording(false);
+    };
+    recorder.start();
+    mediaRecorderRef.current = recorder;
+    setRecording(true);
   };
 
   const toggleVoice = () => {
@@ -147,6 +179,11 @@ export default function AdChatWindow({ ad, onClose }) {
             <div className={`max-w-[75%] rounded-2xl px-3 py-2 ${msg.from === "me" ? "bg-primary text-primary-foreground rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm"}`}>
               {msg.type === "image" ? (
                 <img src={msg.content} alt="sent" className="rounded-lg max-w-full max-h-32 object-cover" />
+              ) : msg.type === "audio" ? (
+                <audio controls className="w-full">
+                  <source src={msg.content} type="audio/webm" />
+                  <source src={msg.content} type="audio/ogg" />
+                </audio>
               ) : (
                 <p className="text-sm leading-relaxed">{msg.content}</p>
               )}
@@ -165,6 +202,9 @@ export default function AdChatWindow({ ad, onClose }) {
         </button>
         <button onClick={toggleVoice} className={`p-2 rounded-xl transition-colors ${listening ? "bg-red-100 text-red-500 animate-pulse" : "hover:bg-muted text-muted-foreground"}`}>
           {listening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+        </button>
+        <button onClick={toggleVoiceMessage} className={`p-2 rounded-xl transition-colors ${recording ? "bg-red-100 text-red-500 animate-pulse" : "hover:bg-muted text-muted-foreground"}`}>
+          {recording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
         </button>
         <input
           value={input}

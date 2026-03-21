@@ -5,6 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { useUserCountry } from "@/hooks/useUserCountry";
+import { useState as useTranslateState } from "react";
 
 const COUNTRIES = ["Egypt", "UAE", "Saudi Arabia", "Kuwait", "Qatar", "Bahrain", "Oman", "Jordan", "Morocco", "USA", "UK", "France", "Germany", "Canada", "Australia"];
 
@@ -16,6 +17,11 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isAdmin = user?.role === "admin";
   const displayCountry = selectedCountry || autoCountry || "Your region";
+  const [lang, setLang] = useTranslateState(() => {
+    if (autoCountry === "Germany") return "Deutsch";
+    if (autoCountry === "Egypt" || autoCountry === "Saudi Arabia" || autoCountry === "UAE") return "عربي";
+    return "English";
+  });
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -66,6 +72,13 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
         </form>
 
         <div className="flex items-center gap-2 ml-auto">
+          <button
+            onClick={() => setLang(l => l === "English" ? (autoCountry === "Germany" ? "Deutsch" : "عربي") : "English")}
+            className="hidden md:flex text-xs bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition-colors"
+            title="Translate"
+          >
+            {lang}
+          </button>
           {user ? (
             <>
               <Link to="/Favorites" className="hidden md:flex p-2 hover:bg-white/10 rounded-lg transition-colors">

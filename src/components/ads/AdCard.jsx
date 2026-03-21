@@ -53,6 +53,7 @@ export default function AdCard({ ad, onFavoriteToggle, isFavorited = false }) {
   const hasMedia = (ad.images?.length > 0) || ad.video_url;
   const sellerOnline = useOnlineStatus(ad.created_by);
   const mediaCount = (ad.images?.length || 0) + (ad.video_url ? 1 : 0);
+  const firstMedia = ad.video_url || ad.images?.[0];
 
   return (
     <>
@@ -61,12 +62,21 @@ export default function AdCard({ ad, onFavoriteToggle, isFavorited = false }) {
       >
         {/* Image */}
         <div className="relative overflow-hidden aspect-[4/3]" onClick={() => navigate(`/Ad/${ad.id}`)}>
-          <img
-            src={displayImage}
-            alt={ad.title}
-            onError={() => setImgError(true)}
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-          />
+          {ad.video_url ? (
+            <video
+              src={ad.video_url}
+              controls
+              className="w-full h-full object-cover"
+              poster={displayImage}
+            />
+          ) : (
+            <img
+              src={displayImage}
+              alt={ad.title}
+              onError={() => setImgError(true)}
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+            />
+          )}
           {ad.is_featured && (
             <div className="absolute top-2 left-2 bg-secondary text-secondary-foreground text-xs font-bold px-2 py-1 rounded-lg flex items-center gap-1">
               <Star className="w-3 h-3" /> Featured
@@ -85,7 +95,7 @@ export default function AdCard({ ad, onFavoriteToggle, isFavorited = false }) {
               className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded-lg flex items-center gap-1 hover:bg-black/80 transition-colors"
             >
               {ad.video_url ? <Play className="w-3 h-3" /> : null}
-              {mediaCount > 1 ? `${mediaCount} photos` : ad.video_url ? "Video" : "View"}
+              {mediaCount > 1 ? `${mediaCount} media` : ad.video_url ? "Video" : "View"}
             </button>
           )}
 
