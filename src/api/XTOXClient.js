@@ -5,8 +5,9 @@ const uuid = () => crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
 
 // Seed demo data
 const demoUsers = [
-  { id: uuid(), email: "demo@xtox.app", full_name: "Demo Seller", role: "admin" },
-  { id: uuid(), email: "buyer@xtox.app", full_name: "Buyer One", role: "user" }
+  { id: uuid(), email: "demo@xtox.app", full_name: "Demo Seller", role: "user" },
+  { id: uuid(), email: "buyer@xtox.app", full_name: "Buyer One", role: "user" },
+  { id: uuid(), email: "admin@xtox.app", full_name: "Super Admin", role: "admin" }
 ];
 
 const demoAds = [
@@ -67,7 +68,10 @@ const demoAds = [
 const demoFavorites = [];
 const demoMessages = [];
 const demoReviews = [];
-const demoNotifications = [];
+const demoNotifications = [
+  { id: uuid(), title: "Welcome to XTOX", created_date: new Date().toISOString() },
+  { id: uuid(), title: "New message from Demo Seller", created_date: new Date().toISOString() },
+];
 const demoAdminChat = [];
 
 const matchFilter = (item, filter = {}) =>

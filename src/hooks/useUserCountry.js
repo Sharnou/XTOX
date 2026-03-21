@@ -1,8 +1,55 @@
 import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
 
-// Detects and locks user to their region — cannot be changed by regular users
+// Client-side country detection without external calls.
 let cachedCountry = null;
+
+const TZ_TO_COUNTRY = [
+  ["Africa/Cairo", "Egypt"],
+  ["Asia/Riyadh", "Saudi Arabia"],
+  ["Asia/Dubai", "UAE"],
+  ["Asia/Kuwait", "Kuwait"],
+  ["Asia/Qatar", "Qatar"],
+  ["Asia/Bahrain", "Bahrain"],
+  ["Asia/Muscat", "Oman"],
+  ["Asia/Amman", "Jordan"],
+  ["Europe/London", "UK"],
+  ["Europe/Paris", "France"],
+  ["Europe/Berlin", "Germany"],
+  ["America/New_York", "USA"],
+  ["America/Los_Angeles", "USA"],
+  ["America/Toronto", "Canada"],
+  ["Australia/Sydney", "Australia"],
+  ["Europe/Madrid", "Spain"],
+  ["Europe/Rome", "Italy"],
+];
+
+const LANG_TO_COUNTRY = [
+  ["ar", "Egypt"],
+  ["ar-AE", "UAE"],
+  ["ar-SA", "Saudi Arabia"],
+  ["en-US", "USA"],
+  ["en-GB", "UK"],
+  ["fr", "France"],
+  ["de", "Germany"],
+  ["es", "Spain"],
+  ["it", "Italy"],
+];
+
+function detectCountryLocal() {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+  const lang = navigator.language || "";
+  const tzHit = TZ_TO_COUNTRY.find(([key]) => tz === key);
+  if (tzHit) return tzHit[1];
+  const langHit = LANG_TO_COUNTRY.find(([key]) => lang.startsWith(key));
+  if (langHit) return langHit[1];
+  const region = lang.split("-")[1];
+  if (region === "DE") return "Germany";
+  if (region === "FR") return "France";
+  if (region === "GB") return "UK";
+  if (region === "CA") return "Canada";
+  if (region === "AU") return "Australia";
+  return "USA";
+}
 
 export function useUserCountry() {
   const [country, setCountry] = useState(cachedCountry || "");
@@ -10,25 +57,11 @@ export function useUserCountry() {
 
   useEffect(() => {
     if (cachedCountry) return;
-    detect();
-  }, []);
-
-  const detect = async () => {
-    // Try IP-based detection via AI
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Based on the browser's timezone "${Intl.DateTimeFormat().resolvedOptions().timeZone}" and language "${navigator.language}", what country is this user most likely from? Return only the country name, matching one of: Egypt, UAE, Saudi Arabia, Kuwait, Qatar, Bahrain, Oman, Jordan, USA, UK, France, Germany, Canada, Australia, Italy, Spain, Morocco, Tunisia, Libya, Iraq, Lebanon, Syria, Palestine, Sudan. Return JSON only.`,
-      response_json_schema: {
-        type: "object",
-        properties: {
-          country: { type: "string" }
-        }
-      }
-    });
-    const c = result.country || "";
+    const c = detectCountryLocal();
     cachedCountry = c;
     setCountry(c);
     setDetected(true);
-  };
+  }, []);
 
   return { country, detected };
 }
