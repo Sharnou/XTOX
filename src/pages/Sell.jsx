@@ -65,7 +65,7 @@ export default function Sell() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     title: "", description: "", price: "", currency: "USD",
-    category: "", subcategory: "", country: user?.country || "", city: "",
+    category: "", subcategory: "", city: "",
     condition: "good", contact_phone: "", images: [], video_url: null, ai_generated: false,
   });
   const [submitting, setSubmitting] = useState(false);
