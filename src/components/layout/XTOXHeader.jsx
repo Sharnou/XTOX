@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, MessageSquare, Heart, Globe, Menu, X } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
@@ -69,7 +69,7 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
         <Link to="/" className="flex-shrink-0 flex items-center gap-2">
           <div className="text-2xl font-black tracking-tight leading-none">
-            <span className="text-secondary">▲</span>
+            <span className="text-secondary">â–²</span>
             <span className="text-primary-foreground ml-1">XTOX</span>
           </div>
         </Link>
@@ -164,3 +164,4 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
     </header>
   );
 }
+
