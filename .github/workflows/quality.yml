@@ -28,4 +28,4 @@ jobs:
         run: npm run lint
 
       - name: Duplicate code scan (jscpd)
-        run: npx jscpd --path src --threshold 2 --min-lines 5 --reporters console
+        run: npx jscpd src --threshold 2 --min-lines 5 --reporters console
