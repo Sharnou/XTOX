@@ -41,7 +41,7 @@ class AISelfHealer {
     // Start background improvement loop every 30 minutes
     this.startImprovementLoop();
 
-    console.info("[XTOX AI] Self-healing system initialized âœ“");
+    console.info("[XTOX AI] Self-healing system initialized (OK)");
   }
 
   async handleError(error) {
