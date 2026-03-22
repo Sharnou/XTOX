@@ -1,5 +1,5 @@
 ﻿import { useState, useRef, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import { X, Send, Mic, MicOff, Image, Phone, Loader2, MessageSquare } from "lucide-react";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
@@ -27,7 +27,7 @@ export default function AdChatWindow({ ad, onClose }) {
   }, [messages]);
 
   const loadHistory = async () => {
-    const msgs = await base44.entities.Message.filter({ ad_id: ad.id }, "created_date", 100);
+    const msgs = await XTOX.entities.Message.filter({ ad_id: ad.id }, "created_date", 100);
     const mine = msgs.filter(m => m.sender_email === user.email || m.receiver_email === user.email);
     setMessages(mine.map(m => ({
       id: m.id,
@@ -40,11 +40,11 @@ export default function AdChatWindow({ ad, onClose }) {
 
   const sendMsg = async (text, type = "text") => {
     if (!text.trim()) return;
-    if (!user) { base44.auth.redirectToLogin(); return; }
+    if (!user) { XTOX.auth.redirectToLogin(); return; }
     setSending(true);
     const newMsg = { from: "me", content: text, type, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
     setMessages(p => [...p, newMsg]);
-    await base44.entities.Message.create({
+    await XTOX.entities.Message.create({
       ad_id: ad.id,
       sender_email: user.email,
       receiver_email: ad.created_by,
@@ -60,7 +60,7 @@ export default function AdChatWindow({ ad, onClose }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const { file_url } = await XTOX.integrations.Core.UploadFile({ file });
     await sendMsg(file_url, "image");
     setUploading(false);
   };
@@ -225,4 +225,5 @@ export default function AdChatWindow({ ad, onClose }) {
     </div>
   );
 }
+
 

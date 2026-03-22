@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
 import AdsGrid from "@/components/ads/AdsGrid";
@@ -61,7 +61,7 @@ export default function Search() {
     if (city) filter.city = city;
     if (category) filter.category = category;
     if (featuredParam) filter.is_featured = true;
-    const results = await base44.entities.Ad.filter(filter, sortBy, 40);
+    const results = await XTOX.entities.Ad.filter(filter, sortBy, 40);
     setAds(results);
     setLoading(false);
   };
@@ -141,4 +141,5 @@ export default function Search() {
     </div>
   );
 }
+
 

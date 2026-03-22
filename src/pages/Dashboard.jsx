@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import XTOXHeader from "@/components/layout/XTOXHeader";
@@ -25,7 +25,7 @@ export default function Dashboard() {
   const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
-    if (!user) { base44.auth.redirectToLogin("/Dashboard"); return; }
+    if (!user) { XTOX.auth.redirectToLogin("/Dashboard"); return; }
     loadData();
     // Check for expired ads on load
     checkExpiredAds();
@@ -34,8 +34,8 @@ export default function Dashboard() {
   const loadData = async () => {
     setLoading(true);
     const [myAds, myMsgs] = await Promise.all([
-      base44.entities.Ad.filter({ created_by: user.email }, "-created_date", 50),
-      base44.entities.Message.filter({ receiver_email: user.email }, "-created_date", 50),
+      XTOX.entities.Ad.filter({ created_by: user.email }, "-created_date", 50),
+      XTOX.entities.Message.filter({ receiver_email: user.email }, "-created_date", 50),
     ]);
     setAds(myAds);
     setMessages(myMsgs);
@@ -43,30 +43,30 @@ export default function Dashboard() {
   };
 
   const checkExpiredAds = async () => {
-    const myAds = await base44.entities.Ad.filter({ created_by: user.email, status: "active" }, "-created_date", 100);
+    const myAds = await XTOX.entities.Ad.filter({ created_by: user.email, status: "active" }, "-created_date", 100);
     const now = new Date();
     for (const ad of myAds) {
       if (!ad.expires_at) continue;
       const expiresAt = new Date(ad.expires_at);
       if (now > expiresAt) {
         // Mark as expired
-        await base44.entities.Ad.update(ad.id, { status: "expired", expired_notified_at: now.toISOString() });
+        await XTOX.entities.Ad.update(ad.id, { status: "expired", expired_notified_at: now.toISOString() });
         // Notify seller via email
-        await base44.integrations.Core.SendEmail({
+        await XTOX.integrations.Core.SendEmail({
           to: user.email,
           subject: `â° Your XTOX ad has expired: "${ad.title}"`,
-          body: `Hello ${user.full_name || "there"},\n\nYour ad "${ad.title}" has expired after 30 days.\n\nYou have 10 days to reactivate it from your Dashboard, otherwise it will be permanently deleted.\n\nLogin to reactivate: https://xtox.base44.app/Dashboard\n\nBest,\nXTOX Team`
+          body: `Hello ${user.full_name || "there"},\n\nYour ad "${ad.title}" has expired after 30 days.\n\nYou have 10 days to reactivate it from your Dashboard, otherwise it will be permanently deleted.\n\nLogin to reactivate: https://xtox.XTOX.app/Dashboard\n\nBest,\nXTOX Team`
         });
       }
     }
     // Auto-delete expired ads older than 10 days
-    const expiredAds = await base44.entities.Ad.filter({ created_by: user.email, status: "expired" }, "-created_date", 100);
+    const expiredAds = await XTOX.entities.Ad.filter({ created_by: user.email, status: "expired" }, "-created_date", 100);
     for (const ad of expiredAds) {
       if (!ad.expired_notified_at) continue;
       const notifiedAt = new Date(ad.expired_notified_at);
       const daysSince = (now - notifiedAt) / (1000 * 60 * 60 * 24);
       if (daysSince >= 10) {
-        await base44.entities.Ad.delete(ad.id);
+        await XTOX.entities.Ad.delete(ad.id);
       }
     }
     loadData();
@@ -74,7 +74,7 @@ export default function Dashboard() {
 
   const deleteAd = async (id) => {
     if (!confirm("Are you sure you want to delete this ad?")) return;
-    await base44.entities.Ad.delete(id);
+    await XTOX.entities.Ad.delete(id);
     setAds(prev => prev.filter(a => a.id !== id));
     toast.success("Ad deleted.");
   };
@@ -82,7 +82,7 @@ export default function Dashboard() {
   const reactivateAd = async (ad) => {
     const newExpiry = new Date();
     newExpiry.setDate(newExpiry.getDate() + 30);
-    await base44.entities.Ad.update(ad.id, { status: "active", expires_at: newExpiry.toISOString(), expired_notified_at: null });
+    await XTOX.entities.Ad.update(ad.id, { status: "active", expires_at: newExpiry.toISOString(), expired_notified_at: null });
     toast.success("Ad reactivated for 30 more days!");
     loadData();
   };
@@ -92,10 +92,10 @@ export default function Dashboard() {
     setExporting(true);
     try {
       const [allAds, allMsgs, allReviews, allFavs] = await Promise.all([
-        base44.entities.Ad.filter({ created_by: user.email }, "-created_date", 200),
-        base44.entities.Message.filter({ sender_email: user.email }, "-created_date", 200),
-        base44.entities.SellerReview.filter({ seller_email: user.email }, "-created_date", 200),
-        base44.entities.Favorite.filter({ user_email: user.email }, "-created_date", 200),
+        XTOX.entities.Ad.filter({ created_by: user.email }, "-created_date", 200),
+        XTOX.entities.Message.filter({ sender_email: user.email }, "-created_date", 200),
+        XTOX.entities.SellerReview.filter({ seller_email: user.email }, "-created_date", 200),
+        XTOX.entities.Favorite.filter({ user_email: user.email }, "-created_date", 200),
       ]);
 
       const exportData = {
@@ -117,7 +117,7 @@ export default function Dashboard() {
       URL.revokeObjectURL(url);
 
       // Also send via email
-      await base44.integrations.Core.SendEmail({
+      await XTOX.integrations.Core.SendEmail({
         to: user.email,
         subject: "ðŸ“¦ Your XTOX Data Export",
         body: `Hello ${user.full_name || "there"},\n\nYour data export has been downloaded to your device.\n\nSummary:\n- Ads: ${allAds.length}\n- Messages sent: ${allMsgs.length}\n- Reviews received: ${allReviews.length}\n- Favorites: ${allFavs.length}\n\nFor a full export with attachments, please contact support.\n\nBest,\nXTOX Team`
@@ -280,3 +280,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

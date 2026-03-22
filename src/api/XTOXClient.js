@@ -1,4 +1,4 @@
-// Unified XTOX client: tries real API first, falls back to local mock.
+﻿// Unified XTOX client: tries real API first, falls back to local mock.
 // Keeps the original mock data but layers REST calls on top so the UI works in both modes.
 
 // API base; leave empty on static GitHub Pages to force mock usage.
@@ -187,7 +187,7 @@ const mock = {
 };
 
 // Unified client with API-first, mock fallback
-export const base44 = {
+export const XTOX = {
   entities: {
     Ad: {
       list: (sort, limit) => safe(() => api(`/ads?status=active&limit=${limit || 100}`), () => mock.entities.Ad.list(sort, limit)),
@@ -321,3 +321,7 @@ export const base44 = {
     },
   },
 };
+
+// Legacy alias for older imports
+export const base44 = XTOX;
+export default XTOX;

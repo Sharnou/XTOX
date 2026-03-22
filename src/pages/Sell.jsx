@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useNavigate } from "react-router-dom";
 import XTOXHeader from "@/components/layout/XTOXHeader";
@@ -79,7 +79,7 @@ export default function Sell() {
   });
 
   useEffect(() => {
-    if (!user) base44.auth.redirectToLogin("/Sell");
+    if (!user) XTOX.auth.redirectToLogin("/Sell");
   }, [user]);
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
@@ -106,7 +106,7 @@ export default function Sell() {
     setSubmitting(true);
 
     // AI moderation check
-    const moderation = await base44.integrations.Core.InvokeLLM({
+    const moderation = await XTOX.integrations.Core.InvokeLLM({
       prompt: `You are a content moderator for a classified marketplace. Check if this ad listing is appropriate:
 Title: ${form.title}
 Description: ${form.description}
@@ -129,12 +129,12 @@ Return JSON with: approved (boolean), reason (string if rejected).`,
     expiresAt.setDate(expiresAt.getDate() + 30);
 
     // Generate hidden AI keywords for better visibility
-    const kwResult = await base44.integrations.Core.InvokeLLM({
+    const kwResult = await XTOX.integrations.Core.InvokeLLM({
       prompt: `Generate 20 hidden SEO keywords for this classified ad listing to improve search visibility. Category: ${form.category}, Title: ${form.title}, Description: ${form.description}. Return as a comma-separated string of relevant keywords, synonyms, and related terms.`,
       response_json_schema: { type: "object", properties: { keywords: { type: "string" } } }
     });
 
-    await base44.entities.Ad.create({
+    await XTOX.entities.Ad.create({
       ...form,
       price: parseFloat(form.price) || 0,
       status,
@@ -161,7 +161,7 @@ Return JSON with: approved (boolean), reason (string if rejected).`,
     }
     const timer = setTimeout(async () => {
       setTranslation(t => ({ ...t, loading: true }));
-      const result = await base44.integrations.Core.InvokeLLM({
+      const result = await XTOX.integrations.Core.InvokeLLM({
         task: "translate",
         title: form.title,
         description: form.description,
@@ -427,4 +427,5 @@ Return JSON with: approved (boolean), reason (string if rejected).`,
     </div>
   );
 }
+
 

@@ -1,6 +1,6 @@
 ﻿import { useState, useRef } from "react";
 import { X, ImageIcon, Video, Loader2, Zap, Camera } from "lucide-react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 
 export default function MediaUploader({ images, video, onImagesChange, onVideoChange, onAIGenerated }) {
   const [uploading, setUploading] = useState(false);
@@ -13,7 +13,7 @@ export default function MediaUploader({ images, video, onImagesChange, onVideoCh
     if (remaining <= 0) return;
     setUploading(true);
     const toUpload = files.slice(0, remaining);
-    const urls = await Promise.all(toUpload.map(f => base44.integrations.Core.UploadFile({ file: f }).then(r => r.file_url)));
+    const urls = await Promise.all(toUpload.map(f => XTOX.integrations.Core.UploadFile({ file: f }).then(r => r.file_url)));
     onImagesChange([...images, ...urls]);
     setUploading(false);
   };
@@ -22,14 +22,14 @@ export default function MediaUploader({ images, video, onImagesChange, onVideoCh
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const { file_url } = await XTOX.integrations.Core.UploadFile({ file });
     onVideoChange(file_url);
     setUploading(false);
 
     // Auto analyze video with AI if callback provided
     if (onAIGenerated) {
       setAnalyzingVideo(true);
-      const result = await base44.integrations.Core.InvokeLLM({
+      const result = await XTOX.integrations.Core.InvokeLLM({
         prompt: `You are an AI listing generator for a classified marketplace. A user has captured/uploaded a video of an item they want to sell. The video URL is: ${file_url}. Based on the video context and URL filename, generate a complete marketplace listing. Detect: category (one of: vehicles, electronics, real_estate, jobs, pets, services, furniture, fashion, sports, books, other), subcategory, title, description, estimated price, currency (USD/EGP/AED/SAR/EUR/GBP based on typical market), and condition.`,
         file_urls: [file_url],
         response_json_schema: {
@@ -143,3 +143,4 @@ export default function MediaUploader({ images, video, onImagesChange, onVideoCh
     </div>
   );
 }
+

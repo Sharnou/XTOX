@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { Send, Users, CheckCircle, Loader2 } from "lucide-react";
 
 export default function AdminBroadcast({ users }) {
@@ -14,7 +14,7 @@ export default function AdminBroadcast({ users }) {
     // Send email to each user
     await Promise.all(
       users.map(u =>
-        base44.integrations.Core.SendEmail({
+        XTOX.integrations.Core.SendEmail({
           to: u.email,
           subject,
           body,
@@ -68,3 +68,4 @@ export default function AdminBroadcast({ users }) {
     </div>
   );
 }
+

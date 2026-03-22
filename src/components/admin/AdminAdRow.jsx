@@ -1,9 +1,9 @@
-import { Star, Trash2 } from "lucide-react";
-import { base44 } from "@/api/XTOXClient";
+﻿import { Star, Trash2 } from "lucide-react";
+import { XTOX } from "@/api/XTOXClient";
 
 export default function AdminAdRow({ ad, onUpdate }) {
   const updateAd = async (data) => {
-    const updated = await base44.entities.Ad.update(ad.id, data);
+    const updated = await XTOX.entities.Ad.update(ad.id, data);
     onUpdate(updated);
   };
 
@@ -35,3 +35,4 @@ export default function AdminAdRow({ ad, onUpdate }) {
     </tr>
   );
 }
+

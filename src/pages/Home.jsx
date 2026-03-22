@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
 import HeroBanner from "@/components/home/HeroBanner";
@@ -31,7 +31,7 @@ export default function Home() {
     if (country) filter.country = country;
 
     // Featured: up to 16, sorted newest first per region
-    const featured = await base44.entities.Ad.filter({ ...filter, is_featured: true }, "-created_date", 16);
+    const featured = await XTOX.entities.Ad.filter({ ...filter, is_featured: true }, "-created_date", 16);
     setFeaturedAds(featured);
     setLoading(false);
   };
@@ -81,4 +81,5 @@ export default function Home() {
     </div>
   );
 }
+
 

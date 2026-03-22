@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect, useRef } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
@@ -15,9 +15,9 @@ export default function ContactAdmin() {
   const bottomRef = useRef(null);
 
   useEffect(() => {
-    if (!user) { base44.auth.redirectToLogin("/ContactAdmin"); return; }
+    if (!user) { XTOX.auth.redirectToLogin("/ContactAdmin"); return; }
     loadMessages();
-    const unsub = base44.entities.AdminChat.subscribe((event) => {
+    const unsub = XTOX.entities.AdminChat.subscribe((event) => {
       if (event.data?.user_email === user.email) {
         setMessages(prev => {
           if (event.type === "create") return [...prev, event.data];
@@ -34,18 +34,18 @@ export default function ContactAdmin() {
   }, [messages]);
 
   const loadMessages = async () => {
-    const msgs = await base44.entities.AdminChat.filter({ user_email: user.email }, "created_date", 100);
+    const msgs = await XTOX.entities.AdminChat.filter({ user_email: user.email }, "created_date", 100);
     setMessages(msgs);
     // mark admin messages as read
     msgs.filter(m => m.sender === "admin" && !m.is_read).forEach(m =>
-      base44.entities.AdminChat.update(m.id, { is_read: true })
+      XTOX.entities.AdminChat.update(m.id, { is_read: true })
     );
   };
 
   const sendMessage = async () => {
     if (!input.trim() || sending) return;
     setSending(true);
-    await base44.entities.AdminChat.create({
+    await XTOX.entities.AdminChat.create({
       user_email: user.email,
       sender: "user",
       content: input.trim(),
@@ -126,3 +126,4 @@ export default function ContactAdmin() {
     </div>
   );
 }
+

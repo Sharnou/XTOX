@@ -1,6 +1,6 @@
 ﻿import { useState } from "react";
 import { Zap, Loader2, CheckCircle, Camera } from "lucide-react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 
 export default function AIListingGenerator({ onGenerated }) {
   const [uploading, setUploading] = useState(false);
@@ -18,7 +18,7 @@ export default function AIListingGenerator({ onGenerated }) {
       return;
     }
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const { file_url } = await XTOX.integrations.Core.UploadFile({ file });
     setUploadedImageUrl(file_url);
     setUploading(false);
     await analyzeImage(file_url);
@@ -26,7 +26,7 @@ export default function AIListingGenerator({ onGenerated }) {
 
   const analyzeImage = async (imageUrl) => {
     setAnalyzing(true);
-    const data = await base44.integrations.Core.InvokeLLM({
+    const data = await XTOX.integrations.Core.InvokeLLM({
       prompt: `You are an AI listing generator for a classified marketplace called XTOX.
 Analyze this product image and generate a complete marketplace listing.
 Return JSON with: title (catchy, SEO-friendly), description (3-4 sentences, highlight key features), 
@@ -109,3 +109,4 @@ Be specific and professional.`,
     </div>
   );
 }
+

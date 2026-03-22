@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { Shield, AlertTriangle, CheckCircle, Loader2 } from "lucide-react";
 
 export default function AIFraudAlert({ title, description, price, category }) {
@@ -9,7 +9,7 @@ export default function AIFraudAlert({ title, description, price, category }) {
   const check = async () => {
     if (!title) return;
     setLoading(true);
-    const data = await base44.integrations.Core.InvokeLLM({
+    const data = await XTOX.integrations.Core.InvokeLLM({
       prompt: `You are a fraud detection AI for XTOX classified marketplace.
 Analyze this listing for potential fraud, scams, or policy violations:
 
@@ -82,3 +82,4 @@ Return JSON with:
     </div>
   );
 }
+

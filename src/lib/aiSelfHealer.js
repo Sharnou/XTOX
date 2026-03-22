@@ -6,7 +6,7 @@
  * - Continuously improves itself based on patterns found
  */
 
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 
 class AISelfHealer {
   constructor() {
@@ -77,7 +77,7 @@ class AISelfHealer {
 
   async diagnoseWithAI(error) {
     try {
-      return await base44.integrations.Core.InvokeLLM({
+      return await XTOX.integrations.Core.InvokeLLM({
         prompt: `You are a senior React/JavaScript engineer acting as an AI self-healing system for XTOX marketplace.
 
 A runtime error occurred:
@@ -111,12 +111,12 @@ Analyze and return:
   async searchForSolution(error, diagnosis) {
     try {
       // Use AI with internet search (Tavily-powered) to find the solution
-      const result = await base44.integrations.Core.InvokeLLM({
+      const result = await XTOX.integrations.Core.InvokeLLM({
         prompt: `You are an expert React developer. Search for the best solution to this error:
 
 Error: "${error.message}"
 Type: ${error.type}
-Context: XTOX classified marketplace built with React + Tailwind + Base44
+Context: XTOX classified marketplace built with React + Tailwind + XTOX
 Previous diagnosis: ${diagnosis?.root_cause || "unknown"}
 
 Search the internet and provide:
@@ -159,7 +159,7 @@ Search the internet and provide:
 
         const recentErrors = this.errorLog.slice(-10).map(e => `${e.type}: ${e.message}`).join("\n");
 
-        await base44.integrations.Core.InvokeLLM({
+        await XTOX.integrations.Core.InvokeLLM({
           prompt: `You are the XTOX AI continuous improvement system. 
 Review these recent errors from the marketplace app and suggest systemic improvements:
 
@@ -209,3 +209,4 @@ if (typeof window !== "undefined") {
 }
 
 export { aiHealer };
+

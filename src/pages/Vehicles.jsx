@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
 import AdsGrid from "@/components/ads/AdsGrid";
@@ -23,7 +23,7 @@ export default function Vehicles() {
     const filter = { status: "active", category: "vehicles" };
     if (sub !== "All") filter.subcategory = sub;
     if (country) filter.country = country;
-    const results = await base44.entities.Ad.filter(filter, "-created_date", 40);
+    const results = await XTOX.entities.Ad.filter(filter, "-created_date", 40);
     setAds(results);
     setLoading(false);
   };
@@ -55,3 +55,4 @@ export default function Vehicles() {
     </div>
   );
 }
+

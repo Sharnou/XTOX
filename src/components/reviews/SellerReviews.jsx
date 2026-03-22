@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { Star } from "lucide-react";
 
 export default function SellerReviews({ sellerEmail }) {
@@ -8,7 +8,7 @@ export default function SellerReviews({ sellerEmail }) {
 
   useEffect(() => {
     if (!sellerEmail) return;
-    base44.entities.SellerReview.filter({ seller_email: sellerEmail }, "-created_date", 20)
+    XTOX.entities.SellerReview.filter({ seller_email: sellerEmail }, "-created_date", 20)
       .then(r => { setReviews(r); setLoading(false); });
   }, [sellerEmail]);
 
@@ -51,3 +51,4 @@ export default function SellerReviews({ sellerEmail }) {
     </div>
   );
 }
+

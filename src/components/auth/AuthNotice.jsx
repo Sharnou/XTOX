@@ -1,8 +1,8 @@
 ﻿/**
  * Shown on pages that require login â€” explains registration process.
- * Base44 handles real email verification automatically via OTP.
+ * XTOX handles real email verification automatically via OTP.
  */
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { Mail, ShieldCheck, CheckCircle } from "lucide-react";
 
 export default function AuthNotice({ redirectTo = "/" }) {
@@ -31,7 +31,7 @@ export default function AuthNotice({ redirectTo = "/" }) {
         </div>
 
         <button
-          onClick={() => base44.auth.redirectToLogin(redirectTo)}
+          onClick={() => XTOX.auth.redirectToLogin(redirectTo)}
           className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-2xl hover:bg-primary/90 transition-colors"
         >
           Register / Login
@@ -43,3 +43,4 @@ export default function AuthNotice({ redirectTo = "/" }) {
     </div>
   );
 }
+

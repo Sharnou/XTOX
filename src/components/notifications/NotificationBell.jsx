@@ -1,6 +1,6 @@
 ﻿import { useEffect, useRef, useState } from "react";
 import { Bell } from "lucide-react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 
 // Simple polling bell with audible chime on new notifications.
 const CHIME_SRC =
@@ -17,7 +17,7 @@ export default function NotificationBell() {
     let mounted = true;
     const poll = async () => {
       try {
-        const notifications = await base44.entities.Notification.list("-created_date", 10);
+        const notifications = await XTOX.entities.Notification.list("-created_date", 10);
         if (!mounted) return;
         const nextCount = notifications.length;
         if (nextCount > prevCount.current && audioRef.current) {
@@ -77,4 +77,5 @@ export default function NotificationBell() {
     </button>
   );
 }
+
 

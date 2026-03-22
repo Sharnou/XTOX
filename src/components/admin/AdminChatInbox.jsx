@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect, useRef } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { Send, Loader2, MessageSquare, User } from "lucide-react";
 
 export default function AdminChatInbox() {
@@ -12,7 +12,7 @@ export default function AdminChatInbox() {
 
   useEffect(() => {
     loadThreads();
-    const unsub = base44.entities.AdminChat.subscribe(() => loadThreads());
+    const unsub = XTOX.entities.AdminChat.subscribe(() => loadThreads());
     return unsub;
   }, []);
 
@@ -25,7 +25,7 @@ export default function AdminChatInbox() {
   }, [messages]);
 
   const loadThreads = async () => {
-    const all = await base44.entities.AdminChat.list("-created_date", 200);
+    const all = await XTOX.entities.AdminChat.list("-created_date", 200);
     // Group by user_email
     const map = {};
     all.forEach(m => {
@@ -36,11 +36,11 @@ export default function AdminChatInbox() {
   };
 
   const loadThread = async (email) => {
-    const msgs = await base44.entities.AdminChat.filter({ user_email: email }, "created_date", 100);
+    const msgs = await XTOX.entities.AdminChat.filter({ user_email: email }, "created_date", 100);
     setMessages(msgs);
     // mark user messages read
     msgs.filter(m => m.sender === "user" && !m.is_read).forEach(m =>
-      base44.entities.AdminChat.update(m.id, { is_read: true })
+      XTOX.entities.AdminChat.update(m.id, { is_read: true })
     );
     loadThreads();
   };
@@ -48,14 +48,14 @@ export default function AdminChatInbox() {
   const sendReply = async () => {
     if (!input.trim() || !selected || sending) return;
     setSending(true);
-    await base44.entities.AdminChat.create({
+    await XTOX.entities.AdminChat.create({
       user_email: selected,
       sender: "admin",
       content: input.trim(),
       is_read: false,
     });
     // Send notification to user
-    await base44.entities.Notification.create({
+    await XTOX.entities.Notification.create({
       user_email: selected,
       title: "New message from Admin",
       message: input.trim().slice(0, 100),
@@ -144,3 +144,4 @@ export default function AdminChatInbox() {
     </div>
   );
 }
+

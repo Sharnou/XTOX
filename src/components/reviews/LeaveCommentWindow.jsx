@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import { X, Star, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -14,12 +14,12 @@ export default function LeaveCommentWindow({ ad, onClose, onReviewed }) {
   const starLabels = ["Block seller", "Poor", "Fair", "Good", "Very Good", "Excellent"];
 
   const handleSubmit = async () => {
-    if (!user) { base44.auth.redirectToLogin(); return; }
+    if (!user) { XTOX.auth.redirectToLogin(); return; }
     if (stars === 0 && !comment.trim()) return;
     setSaving(true);
 
     // Save review
-    await base44.entities.SellerReview.create({
+    await XTOX.entities.SellerReview.create({
       seller_email: ad.created_by,
       reviewer_email: user.email,
       ad_id: ad.id,
@@ -34,11 +34,11 @@ export default function LeaveCommentWindow({ ad, onClose, onReviewed }) {
     else if (stars === 1) viewsDelta = -15; // 1 star: reduce views
     // 0 stars: block seller â€” handled via status
     if (stars === 0) {
-      await base44.entities.Ad.update(ad.id, { status: "blocked" });
+      await XTOX.entities.Ad.update(ad.id, { status: "blocked" });
       toast.error("Seller has been reported and blocked.");
     } else {
       const newViews = Math.max(0, (ad.views_count || 0) + viewsDelta);
-      await base44.entities.Ad.update(ad.id, { views_count: newViews });
+      await XTOX.entities.Ad.update(ad.id, { views_count: newViews });
       toast.success("Review submitted! Thank you.");
     }
 
@@ -125,3 +125,4 @@ export default function LeaveCommentWindow({ ad, onClose, onReviewed }) {
     </div>
   );
 }
+

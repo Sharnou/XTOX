@@ -1,14 +1,14 @@
 ﻿import { useState, useRef, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { Send, Bot, Loader2, Code2, BookOpen } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
-const SYSTEM_PROMPT = `You are an elite AI Software Developer and Architect embedded in the XTOX classified marketplace platform (React + Tailwind CSS + Base44 backend-as-a-service).
+const SYSTEM_PROMPT = `You are an elite AI Software Developer and Architect embedded in the XTOX classified marketplace platform (React + Tailwind CSS + XTOX backend-as-a-service).
 
 PLATFORM KNOWLEDGE:
 - Frontend: React 18, Tailwind CSS, shadcn/ui, Lucide icons, Framer Motion, React Router v6, React Query
-- Backend: Base44 SDK â€” base44.entities.EntityName.create/update/delete/filter/list/subscribe, base44.integrations.Core.InvokeLLM/UploadFile/SendEmail
-- Auth: useAuth() hook from @/lib/AuthContext, base44.auth.me/updateMe/logout/redirectToLogin
+- Backend: XTOX SDK â€” XTOX.entities.EntityName.create/update/delete/filter/list/subscribe, XTOX.integrations.Core.InvokeLLM/UploadFile/SendEmail
+- Auth: useAuth() hook from @/lib/AuthContext, XTOX.auth.me/updateMe/logout/redirectToLogin
 - File structure: pages/, components/, entities/ (JSON schemas), hooks/, lib/
 
 CAPABILITIES:
@@ -82,7 +82,7 @@ export default function AIDeveloperChat() {
       ? `\nLearned style preferences: ${codeStyle.patterns.join(", ")}.`
       : "";
 
-    const response = await base44.integrations.Core.InvokeLLM({
+    const response = await XTOX.integrations.Core.InvokeLLM({
       prompt: `${SYSTEM_PROMPT}${styleCtx}
 
 Full conversation:
@@ -192,3 +192,4 @@ Respond as the AI Developer with production-ready code:`,
     </div>
   );
 }
+

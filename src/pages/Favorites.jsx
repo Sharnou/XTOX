@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
@@ -13,16 +13,16 @@ export default function Favorites() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) { base44.auth.redirectToLogin("/Favorites"); return; }
+    if (!user) { XTOX.auth.redirectToLogin("/Favorites"); return; }
     load();
   }, [user]);
 
   const load = async () => {
     setLoading(true);
-    const favs = await base44.entities.Favorite.filter({ user_email: user.email }, "-created_date", 50);
+    const favs = await XTOX.entities.Favorite.filter({ user_email: user.email }, "-created_date", 50);
     if (favs.length === 0) { setAds([]); setLoading(false); return; }
     const adIds = favs.map(f => f.ad_id);
-    const allAds = await base44.entities.Ad.list("-created_date", 200);
+    const allAds = await XTOX.entities.Ad.list("-created_date", 200);
     setAds(allAds.filter(a => adIds.includes(a.id)));
     setLoading(false);
   };
@@ -55,3 +55,4 @@ export default function Favorites() {
     </div>
   );
 }
+

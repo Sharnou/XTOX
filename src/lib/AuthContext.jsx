@@ -1,5 +1,5 @@
 ﻿import React, { createContext, useState, useContext, useEffect } from 'react';
-import { base44 } from '@/api/XTOXClient';
+import { XTOX } from '@/api/XTOXClient';
 
 const AuthContext = createContext();
 
@@ -14,17 +14,17 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const bootstrap = async () => {
       try {
-        const me = await base44.auth.me();
+        const me = await XTOX.auth.me();
         if (me) {
           setUser(me);
           setIsAuthenticated(true);
         } else {
-          const [demoUser] = await base44.entities.User.list();
+          const [demoUser] = await XTOX.entities.User.list();
           setUser(demoUser || { email: 'guest@xtox.app', full_name: 'Guest User' });
           setIsAuthenticated(true);
         }
       } catch {
-        const [demoUser] = await base44.entities.User.list();
+        const [demoUser] = await XTOX.entities.User.list();
         setUser(demoUser || { email: 'guest@xtox.app', full_name: 'Guest User' });
         setIsAuthenticated(true);
       } finally {
@@ -35,14 +35,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { user: loggedIn } = await base44.auth.login(email, password);
+    const { user: loggedIn } = await XTOX.auth.login(email, password);
     setUser(loggedIn || { email: 'demo@xtox.app', full_name: 'Demo User' });
     setIsAuthenticated(true);
     setAuthError(null);
   };
 
   const logout = () => {
-    base44.auth.logout();
+    XTOX.auth.logout();
     setUser(null);
     setIsAuthenticated(false);
   };
@@ -74,4 +74,5 @@ export const useAuth = () => {
   }
   return context;
 };
+
 

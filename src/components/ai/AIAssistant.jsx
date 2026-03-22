@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect, useRef } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import { X, Send, Minimize2, Maximize2, Zap, Loader2, Mic } from "lucide-react";
 import { useLocation } from "react-router-dom";
@@ -56,7 +56,7 @@ export default function AIAssistant({ detectedCountry }) {
     const userCtx = user ? `User is logged in as ${user.full_name} (${user.email}).` : "User is not logged in.";
     const countryCtx = detectedCountry ? `Detected country: ${detectedCountry}.` : "";
 
-    const greeting = await base44.integrations.Core.InvokeLLM({
+    const greeting = await XTOX.integrations.Core.InvokeLLM({
       prompt: `You are XTOX AI Assistant â€” a friendly, smart co-pilot for the XTOX international classified marketplace.
 ${pageCtx} ${userCtx} ${countryCtx}
 Generate a short, warm, helpful greeting message (2-3 sentences max).
@@ -94,7 +94,7 @@ Guide them through these steps:
 7. IMPORTANT: If user says "done" or "paid", respond with a confirmation message that starts exactly with: "BOOST_CONFIRMED:" followed by the ad title they mentioned
 ` : "";
 
-    const response = await base44.integrations.Core.InvokeLLM({
+    const response = await XTOX.integrations.Core.InvokeLLM({
       prompt: `You are XTOX AI Assistant â€” a smart co-pilot for XTOX international classified marketplace.
 Context: ${pageCtx}
 User info: ${userCtx}
@@ -122,13 +122,13 @@ NEVER say you are Claude or any AI model â€” you are "XTOX AI".`,
     if (response.startsWith("BOOST_CONFIRMED:")) {
       const adTitle = response.replace("BOOST_CONFIRMED:", "").trim().split("\n")[0];
       if (user) {
-        await base44.entities.Notification.create({
+        await XTOX.entities.Notification.create({
           user_email: "Ahmed_sharnou@yahoo.com",
           title: "âš¡ Boost Payment Confirmed",
           message: `User ${user.email} confirmed payment for boosting ad: "${adTitle}"`,
           type: "boost",
         });
-        await base44.entities.Notification.create({
+        await XTOX.entities.Notification.create({
           user_email: user.email,
           title: "Boost request received!",
           message: `Your boost request for "${adTitle}" has been received. Admin will activate Featured status within a few hours.`,
@@ -306,3 +306,4 @@ NEVER say you are Claude or any AI model â€” you are "XTOX AI".`,
     </>
   );
 }
+

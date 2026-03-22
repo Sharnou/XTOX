@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
@@ -26,7 +26,7 @@ export default function Admin() {
   const [aiReport, setAiReport] = useState(null);
 
   useEffect(() => {
-    if (!user) { base44.auth.redirectToLogin("/Admin"); return; }
+    if (!user) { XTOX.auth.redirectToLogin("/Admin"); return; }
     if (user.email !== SUPER_ADMIN && user.role !== "admin") { navigate("/"); return; }
     load();
   }, [user]);
@@ -34,8 +34,8 @@ export default function Admin() {
   const load = async () => {
     setLoading(true);
     const [allAds, allUsers] = await Promise.all([
-      base44.entities.Ad.list("-created_date", 100),
-      base44.entities.User.list("-created_date", 50),
+      XTOX.entities.Ad.list("-created_date", 100),
+      XTOX.entities.User.list("-created_date", 50),
     ]);
     setAds(allAds);
     setUsers(allUsers);
@@ -45,7 +45,7 @@ export default function Admin() {
   const runAIModeration = async () => {
     setAiAnalyzing(true);
     const pendingAds = ads.filter(a => a.status === "pending" || a.status === "active").slice(0, 10);
-    const report = await base44.integrations.Core.InvokeLLM({
+    const report = await XTOX.integrations.Core.InvokeLLM({
       prompt: `You are an AI content moderator for XTOX marketplace.
 Review these ${pendingAds.length} ad listings and identify any that are suspicious, fraudulent, or policy-violating.
 Ads: ${JSON.stringify(pendingAds.map(a => ({ id: a.id, title: a.title, description: a.description, price: a.price, category: a.category })))}
@@ -241,7 +241,7 @@ Return JSON with: summary (string), suspicious_ids (array of ad IDs), recommenda
                         {u.email !== SUPER_ADMIN && (
                           <button
                             onClick={async () => {
-                              await base44.entities.User.update(u.id, { role: u.role === "admin" ? "user" : "admin" });
+                              await XTOX.entities.User.update(u.id, { role: u.role === "admin" ? "user" : "admin" });
                               load();
                             }}
                             className="text-xs px-3 py-1 border border-border rounded-lg hover:bg-muted transition-colors"
@@ -263,3 +263,4 @@ Return JSON with: summary (string), suspicious_ids (array of ad IDs), recommenda
     </div>
   );
 }
+

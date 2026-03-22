@@ -1,7 +1,7 @@
 ﻿import { useState } from "react";
 import { Heart, MapPin, Eye, Star, Zap, MessageCircle, Play, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import AdChatWindow from "@/components/chat/AdChatWindow";
 import AdMediaViewer from "@/components/ads/AdMediaViewer";
@@ -28,7 +28,7 @@ export default function AdCard({ ad, onFavoriteToggle, isFavorited = false }) {
   const handleFavorite = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!user) { base44.auth.redirectToLogin(); return; }
+    if (!user) { XTOX.auth.redirectToLogin(); return; }
     setFavorited(!favorited);
     onFavoriteToggle?.(ad.id, !favorited);
   };
@@ -36,7 +36,7 @@ export default function AdCard({ ad, onFavoriteToggle, isFavorited = false }) {
   const openChat = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!user) { base44.auth.redirectToLogin(); return; }
+    if (!user) { XTOX.auth.redirectToLogin(); return; }
     setChatOpen(true);
   };
 
@@ -159,4 +159,5 @@ export default function AdCard({ ad, onFavoriteToggle, isFavorited = false }) {
     </>
   );
 }
+
 

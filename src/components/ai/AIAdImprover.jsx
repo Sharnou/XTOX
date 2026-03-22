@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { Wand2, Loader2, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function AIAdImprover({ title, description, price, category, onApply }) {
@@ -12,7 +12,7 @@ export default function AIAdImprover({ title, description, price, category, onAp
     setLoading(true);
     setExpanded(true);
 
-    const result = await base44.integrations.Core.InvokeLLM({
+    const result = await XTOX.integrations.Core.InvokeLLM({
       prompt: `You are an expert marketplace listing optimizer for XTOX classified marketplace.
 Analyze this listing and provide concrete improvements:
 
@@ -142,3 +142,4 @@ Return JSON with:
     </div>
   );
 }
+

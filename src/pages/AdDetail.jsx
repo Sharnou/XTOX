@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useParams } from "react-router-dom";
 import XTOXHeader from "@/components/layout/XTOXHeader";
@@ -24,14 +24,14 @@ export default function AdDetail() {
 
   useEffect(() => {
     if (!id) return;
-    base44.entities.Ad.filter({ id }, "-created_date", 1).then(async ([found]) => {
+    XTOX.entities.Ad.filter({ id }, "-created_date", 1).then(async ([found]) => {
       if (found) {
         setAd(found);
         // increment views
-        base44.entities.Ad.update(found.id, { views_count: (found.views_count || 0) + 1 });
+        XTOX.entities.Ad.update(found.id, { views_count: (found.views_count || 0) + 1 });
         // check if favorited
         if (user) {
-          const favs = await base44.entities.Favorite.filter({ ad_id: found.id, user_email: user.email }, "-created_date", 1);
+          const favs = await XTOX.entities.Favorite.filter({ ad_id: found.id, user_email: user.email }, "-created_date", 1);
           setFavorited(favs.length > 0);
         }
       }
@@ -40,12 +40,12 @@ export default function AdDetail() {
   }, [id, user]);
 
   const toggleFavorite = async () => {
-    if (!user) { base44.auth.redirectToLogin(); return; }
+    if (!user) { XTOX.auth.redirectToLogin(); return; }
     if (favorited) {
-      const favs = await base44.entities.Favorite.filter({ ad_id: ad.id, user_email: user.email }, "-created_date", 1);
-      if (favs[0]) await base44.entities.Favorite.delete(favs[0].id);
+      const favs = await XTOX.entities.Favorite.filter({ ad_id: ad.id, user_email: user.email }, "-created_date", 1);
+      if (favs[0]) await XTOX.entities.Favorite.delete(favs[0].id);
     } else {
-      await base44.entities.Favorite.create({ ad_id: ad.id, user_email: user.email });
+      await XTOX.entities.Favorite.create({ ad_id: ad.id, user_email: user.email });
     }
     setFavorited(!favorited);
     toast.success(favorited ? "Removed from favorites" : "Added to favorites");
@@ -205,13 +205,13 @@ export default function AdDetail() {
               {!isOwner ? (
                 <div className="space-y-2">
                   <button
-                    onClick={() => { if (!user) { base44.auth.redirectToLogin(); return; } setChatOpen(true); }}
+                    onClick={() => { if (!user) { XTOX.auth.redirectToLogin(); return; } setChatOpen(true); }}
                     className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-xl hover:bg-primary/90 transition-colors font-semibold"
                   >
                     <MessageCircle className="w-4 h-4" /> Chat with Seller
                   </button>
                   <button
-                    onClick={() => { if (!user) { base44.auth.redirectToLogin(); return; } setCommentOpen(true); }}
+                    onClick={() => { if (!user) { XTOX.auth.redirectToLogin(); return; } setCommentOpen(true); }}
                     className="w-full flex items-center justify-center gap-2 bg-secondary text-secondary-foreground py-3 rounded-xl hover:bg-secondary/90 transition-colors font-semibold"
                   >
                     <MessageSquare className="w-4 h-4" /> Leave a Comment
@@ -255,3 +255,4 @@ export default function AdDetail() {
     </div>
   );
 }
+

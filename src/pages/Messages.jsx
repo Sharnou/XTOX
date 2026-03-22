@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from "react";
-import { base44 } from "@/api/XTOXClient";
+import { XTOX } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
@@ -11,13 +11,13 @@ export default function Messages() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) { base44.auth.redirectToLogin("/Messages"); return; }
+    if (!user) { XTOX.auth.redirectToLogin("/Messages"); return; }
     load();
   }, [user]);
 
   const load = async () => {
     setLoading(true);
-    const msgs = await base44.entities.Message.filter({ receiver_email: user.email }, "-created_date", 50);
+    const msgs = await XTOX.entities.Message.filter({ receiver_email: user.email }, "-created_date", 50);
     setMessages(msgs);
     setLoading(false);
   };
@@ -63,3 +63,4 @@ export default function Messages() {
     </div>
   );
 }
+
