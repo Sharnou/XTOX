@@ -9,6 +9,8 @@ on:
 jobs:
   lint-and-dup-check:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,8 +25,8 @@ jobs:
             npm-shrinkwrap.json
             yarn.lock
 
-      - name: Install deps
-        run: npm install --no-fund --no-audit --prefer-offline
+      - name: Install deps (no lockfile)
+        run: npm install --no-fund --no-audit --prefer-offline --ignore-scripts
 
       - name: ESLint
         run: npm run lint
