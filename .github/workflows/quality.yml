@@ -17,7 +17,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            npm-shrinkwrap.json
+            yarn.lock
 
       - name: Install deps
         run: npm install --no-fund --no-audit --prefer-offline
