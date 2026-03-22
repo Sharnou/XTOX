@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
-import { MessageSquare, X, Send, Minimize2, Maximize2, Zap, Loader2, Mic } from "lucide-react";
+import { X, Send, Minimize2, Maximize2, Zap, Loader2, Mic } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 

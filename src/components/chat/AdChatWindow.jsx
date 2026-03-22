@@ -1,7 +1,7 @@
 ﻿import { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
-import { X, Send, Mic, MicOff, Image, Phone, Loader2, MessageSquare, Play } from "lucide-react";
+import { X, Send, Mic, MicOff, Image, Phone, Loader2, MessageSquare } from "lucide-react";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 
 export default function AdChatWindow({ ad, onClose }) {

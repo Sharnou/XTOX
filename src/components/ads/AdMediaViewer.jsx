@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, X, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 export default function AdMediaViewer({ images = [], video, onClose }) {
   const [index, setIndex] = useState(0);

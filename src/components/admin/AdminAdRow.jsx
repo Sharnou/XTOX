@@ -1,5 +1,5 @@
-﻿import { Shield, Star, Trash2, Eye, Check, X } from "lucide-react";
-import { base44 } from "@/api/XTOXClient";
+﻿import { Shield, Star, Trash2 } from  lucide-react; from "lucide-react";
+import { Shield, Star, Trash2 } from  lucide-react; from "@/api/XTOXClient";
 
 export default function AdminAdRow({ ad, onUpdate }) {
   const updateAd = async (data) => {
@@ -73,3 +73,4 @@ export default function AdminAdRow({ ad, onUpdate }) {
     </tr>
   );
 }
+

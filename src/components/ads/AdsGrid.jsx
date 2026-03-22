@@ -1,5 +1,4 @@
 import AdCard from "./AdCard";
-import { Loader2 } from "lucide-react";
 
 export default function AdsGrid({ ads, isLoading, emptyMessage = "No ads found" }) {
   if (isLoading) {

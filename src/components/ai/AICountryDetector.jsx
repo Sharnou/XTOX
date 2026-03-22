@@ -1,5 +1,4 @@
 ﻿import { useEffect, useState } from "react";
-import { base44 } from "@/api/XTOXClient";
 import { Globe, X } from "lucide-react";
 
 const BROWSER_LANG_MAP = {
@@ -45,3 +44,4 @@ export default function AICountryDetector({ onDetected }) {
     </div>
   );
 }
+

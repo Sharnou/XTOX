@@ -1,6 +1,6 @@
 ﻿import { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/XTOXClient";
-import { Send, Bot, Loader2, Code2, RefreshCw, BookOpen, Lightbulb } from "lucide-react";
+import { Send, Bot, Loader2, Code2, BookOpen } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const SYSTEM_PROMPT = `You are an elite AI Software Developer and Architect embedded in the XTOX classified marketplace platform (React + Tailwind CSS + Base44 backend-as-a-service).
