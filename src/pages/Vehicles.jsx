@@ -3,8 +3,7 @@ import { base44 } from "@/api/XTOXClient";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
 import AdsGrid from "@/components/ads/AdsGrid";
-import { Car, Link as LinkIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Car } from "lucide-react";
 
 const SUBS = ["All", "Cars", "Motorcycles", "Trucks", "Spare Parts", "Boats"];
 

@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import { Zap, Upload, Loader2, CheckCircle, Camera } from "lucide-react";
+import { Zap, Loader2, CheckCircle, Camera } from "lucide-react";
 import { base44 } from "@/api/XTOXClient";
 
 export default function AIListingGenerator({ onGenerated }) {

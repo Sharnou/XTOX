@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
-import { Eye, MessageSquare, Plus, Trash2, Clock, RefreshCw, Mail, Download, Loader2, AlertTriangle } from "lucide-react";
+import { Eye, MessageSquare, Plus, Trash2, Clock, RefreshCw, Download, Loader2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 const STATUS_COLORS = {

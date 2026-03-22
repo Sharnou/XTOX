@@ -3,7 +3,7 @@ import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
-import { MessageSquare, Send } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 export default function Messages() {
   const { user } = useAuth();
