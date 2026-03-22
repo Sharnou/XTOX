@@ -1,4 +1,4 @@
-import { Shield, Star, Trash2 } from "lucide-react";
+import { Star, Trash2 } from "lucide-react";
 import { base44 } from "@/api/XTOXClient";
 
 export default function AdminAdRow({ ad, onUpdate }) {
