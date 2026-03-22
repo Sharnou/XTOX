@@ -1,8 +1,8 @@
-/**
- * Shown on pages that require login — explains registration process.
+﻿/**
+ * Shown on pages that require login â€” explains registration process.
  * Base44 handles real email verification automatically via OTP.
  */
-import { base44 } from "@/api/base44Client";
+import { base44 } from "@/api/XTOXClient";
 import { Mail, ShieldCheck, CheckCircle } from "lucide-react";
 
 export default function AuthNotice({ redirectTo = "/" }) {
@@ -10,7 +10,7 @@ export default function AuthNotice({ redirectTo = "/" }) {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
         <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6">
-          <span className="text-3xl font-black text-secondary">▲</span>
+          <span className="text-3xl font-black text-secondary">â–²</span>
         </div>
         <h2 className="text-2xl font-black mb-2">Join XTOX</h2>
         <p className="text-muted-foreground mb-8">Create a free account to post ads, chat with sellers, and save favorites.</p>
@@ -37,7 +37,7 @@ export default function AuthNotice({ redirectTo = "/" }) {
           Register / Login
         </button>
         <p className="text-xs text-muted-foreground mt-4">
-          ✅ Real email verification required. No fake accounts allowed.
+          âœ… Real email verification required. No fake accounts allowed.
         </p>
       </div>
     </div>

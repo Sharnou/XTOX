@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useEffect, useRef } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
@@ -94,7 +94,7 @@ export default function ContactAdmin() {
                   <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm ${msg.sender === "user" ? "bg-primary text-primary-foreground rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm"}`}>
                     <p className="leading-relaxed">{msg.content}</p>
                     <p className={`text-[10px] mt-1 ${msg.sender === "user" ? "text-primary-foreground/50" : "text-muted-foreground"}`}>
-                      {msg.sender === "admin" ? "Admin" : "You"} • {new Date(msg.created_date).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                      {msg.sender === "admin" ? "Admin" : "You"} â€¢ {new Date(msg.created_date).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                     </p>
                   </div>
                 </div>

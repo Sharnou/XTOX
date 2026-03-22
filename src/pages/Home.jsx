@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useEffect } from "react";
+import { base44 } from "@/api/XTOXClient";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
 import HeroBanner from "@/components/home/HeroBanner";
@@ -44,7 +44,7 @@ export default function Home() {
       <HeroBanner />
       <CategoryGrid />
 
-      {/* Featured Ads — by region, 16 max, newest first */}
+      {/* Featured Ads â€” by region, 16 max, newest first */}
       <section className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
@@ -65,7 +65,7 @@ export default function Home() {
         <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-3xl p-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <h3 className="text-2xl font-black mb-2">Have something to sell?</h3>
-            <p className="text-primary-foreground/70">Use AI to generate your listing in seconds — just upload a photo.</p>
+            <p className="text-primary-foreground/70">Use AI to generate your listing in seconds â€” just upload a photo.</p>
           </div>
           <Link
             to="/Sell"
@@ -81,3 +81,4 @@ export default function Home() {
     </div>
   );
 }
+

@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useEffect, useRef } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import { MessageSquare, X, Send, Minimize2, Maximize2, Zap, Loader2, Mic } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
 const COUNTRY_HINTS = {
-  EG: { country: "Egypt", currency: "EGP", lang: "ar", flag: "🇪🇬" },
-  AE: { country: "UAE", currency: "AED", lang: "en", flag: "🇦🇪" },
-  SA: { country: "Saudi Arabia", currency: "SAR", lang: "ar", flag: "🇸🇦" },
-  US: { country: "USA", currency: "USD", lang: "en", flag: "🇺🇸" },
-  GB: { country: "UK", currency: "GBP", lang: "en", flag: "🇬🇧" },
-  FR: { country: "France", currency: "EUR", lang: "fr", flag: "🇫🇷" },
-  DE: { country: "Germany", currency: "EUR", lang: "de", flag: "🇩🇪" },
+  EG: { country: "Egypt", currency: "EGP", lang: "ar", flag: "ðŸ‡ªðŸ‡¬" },
+  AE: { country: "UAE", currency: "AED", lang: "en", flag: "ðŸ‡¦ðŸ‡ª" },
+  SA: { country: "Saudi Arabia", currency: "SAR", lang: "ar", flag: "ðŸ‡¸ðŸ‡¦" },
+  US: { country: "USA", currency: "USD", lang: "en", flag: "ðŸ‡ºðŸ‡¸" },
+  GB: { country: "UK", currency: "GBP", lang: "en", flag: "ðŸ‡¬ðŸ‡§" },
+  FR: { country: "France", currency: "EUR", lang: "fr", flag: "ðŸ‡«ðŸ‡·" },
+  DE: { country: "Germany", currency: "EUR", lang: "de", flag: "ðŸ‡©ðŸ‡ª" },
 };
 
 const PAGE_CONTEXT = {
@@ -57,11 +57,11 @@ export default function AIAssistant({ detectedCountry }) {
     const countryCtx = detectedCountry ? `Detected country: ${detectedCountry}.` : "";
 
     const greeting = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are XTOX AI Assistant — a friendly, smart co-pilot for the XTOX international classified marketplace.
+      prompt: `You are XTOX AI Assistant â€” a friendly, smart co-pilot for the XTOX international classified marketplace.
 ${pageCtx} ${userCtx} ${countryCtx}
 Generate a short, warm, helpful greeting message (2-3 sentences max).
 Mention what you can help with based on the current page. Use emojis. Be concise and friendly.
-Do NOT introduce yourself as Claude or any AI model — you are "XTOX AI".`,
+Do NOT introduce yourself as Claude or any AI model â€” you are "XTOX AI".`,
     });
 
     setMessages([{ role: "assistant", content: greeting }]);
@@ -79,7 +79,7 @@ Do NOT introduce yourself as Claude or any AI model — you are "XTOX AI".`,
     const userCtx = user ? `User: ${user.full_name}, Email: ${user.email}` : "Not logged in.";
     const history = messages.slice(-6).map(m => `${m.role === "user" ? "User" : "AI"}: ${m.content}`).join("\n");
 
-    const boostKeywords = ["boost", "featured", "feature my ad", "promote", "رفع", "مميز", "ترويج"];
+    const boostKeywords = ["boost", "featured", "feature my ad", "promote", "Ø±ÙØ¹", "Ù…Ù…ÙŠØ²", "ØªØ±ÙˆÙŠØ¬"];
     const isBoostRequest = boostKeywords.some(k => userMsg.toLowerCase().includes(k));
 
     const boostInstructions = isBoostRequest ? `
@@ -95,7 +95,7 @@ Guide them through these steps:
 ` : "";
 
     const response = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are XTOX AI Assistant — a smart co-pilot for XTOX international classified marketplace.
+      prompt: `You are XTOX AI Assistant â€” a smart co-pilot for XTOX international classified marketplace.
 Context: ${pageCtx}
 User info: ${userCtx}
 Country: ${detectedCountry || "Unknown"}
@@ -115,7 +115,7 @@ You help users with:
 - Fraud awareness and safety tips
 
 Reply in the SAME LANGUAGE the user is using. Be concise, friendly, helpful. Use markdown for lists. Max 200 words.
-NEVER say you are Claude or any AI model — you are "XTOX AI".`,
+NEVER say you are Claude or any AI model â€” you are "XTOX AI".`,
     });
 
     // If boost confirmed, create a notification for admin
@@ -124,7 +124,7 @@ NEVER say you are Claude or any AI model — you are "XTOX AI".`,
       if (user) {
         await base44.entities.Notification.create({
           user_email: "Ahmed_sharnou@yahoo.com",
-          title: "⚡ Boost Payment Confirmed",
+          title: "âš¡ Boost Payment Confirmed",
           message: `User ${user.email} confirmed payment for boosting ad: "${adTitle}"`,
           type: "boost",
         });
@@ -161,10 +161,10 @@ NEVER say you are Claude or any AI model — you are "XTOX AI".`,
   };
 
   const QUICK_ACTIONS = [
-    { label: "How to post an ad?", icon: "📋" },
-    { label: "Boost my ad to Featured", icon: "⚡" },
-    { label: "Is this price fair?", icon: "💰" },
-    { label: "Safety tips", icon: "🛡️" },
+    { label: "How to post an ad?", icon: "ðŸ“‹" },
+    { label: "Boost my ad to Featured", icon: "âš¡" },
+    { label: "Is this price fair?", icon: "ðŸ’°" },
+    { label: "Safety tips", icon: "ðŸ›¡ï¸" },
   ];
 
   return (

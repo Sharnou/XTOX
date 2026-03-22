@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useRef, useEffect } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { Send, Bot, Loader2, Code2, RefreshCw, BookOpen, Lightbulb } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
@@ -7,7 +7,7 @@ const SYSTEM_PROMPT = `You are an elite AI Software Developer and Architect embe
 
 PLATFORM KNOWLEDGE:
 - Frontend: React 18, Tailwind CSS, shadcn/ui, Lucide icons, Framer Motion, React Router v6, React Query
-- Backend: Base44 SDK — base44.entities.EntityName.create/update/delete/filter/list/subscribe, base44.integrations.Core.InvokeLLM/UploadFile/SendEmail
+- Backend: Base44 SDK â€” base44.entities.EntityName.create/update/delete/filter/list/subscribe, base44.integrations.Core.InvokeLLM/UploadFile/SendEmail
 - Auth: useAuth() hook from @/lib/AuthContext, base44.auth.me/updateMe/logout/redirectToLogin
 - File structure: pages/, components/, entities/ (JSON schemas), hooks/, lib/
 
@@ -28,10 +28,10 @@ LEARNING MODE (Silent Background):
 - You remember context from earlier in this conversation
 
 RESPONSE FORMAT:
-1. 🎯 Understanding — restate what was asked
-2. 🏗️ Plan — technical approach
-3. 💻 Code — complete, ready-to-paste code snippets with file paths
-4. ⚠️ Notes — warnings, dependencies, or follow-ups needed
+1. ðŸŽ¯ Understanding â€” restate what was asked
+2. ðŸ—ï¸ Plan â€” technical approach
+3. ðŸ’» Code â€” complete, ready-to-paste code snippets with file paths
+4. âš ï¸ Notes â€” warnings, dependencies, or follow-ups needed
 
 Always write COMPLETE code, never partial. Include all imports. Be opinionated and suggest best practices.`;
 
@@ -39,7 +39,7 @@ export default function AIDeveloperChat() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "👋 **AI Developer Console — Maximum Intelligence Mode**\n\nI'm your elite developer with full knowledge of the XTOX codebase.\n\n**What I can do:**\n- 🔧 Fix any bug with root-cause analysis\n- ✨ Build new features end-to-end\n- 🎨 Redesign UI components\n- 🧠 Learn your coding style silently\n- 📊 Analyze & optimize performance\n- 🔐 Security & fraud detection improvements\n- 🤖 AI feature enhancements\n\nGive me any order — I'll deliver production-ready code."
+      content: "ðŸ‘‹ **AI Developer Console â€” Maximum Intelligence Mode**\n\nI'm your elite developer with full knowledge of the XTOX codebase.\n\n**What I can do:**\n- ðŸ”§ Fix any bug with root-cause analysis\n- âœ¨ Build new features end-to-end\n- ðŸŽ¨ Redesign UI components\n- ðŸ§  Learn your coding style silently\n- ðŸ“Š Analyze & optimize performance\n- ðŸ” Security & fraud detection improvements\n- ðŸ¤– AI feature enhancements\n\nGive me any order â€” I'll deliver production-ready code."
     }
   ]);
   const [input, setInput] = useState("");
@@ -97,10 +97,10 @@ Respond as the AI Developer with production-ready code:`,
   };
 
   const QUICK_ORDERS = [
-    { label: "Fix all current bugs", icon: "🔧" },
-    { label: "Improve mobile UX", icon: "📱" },
-    { label: "Optimize performance", icon: "⚡" },
-    { label: "Add dark mode toggle", icon: "🌙" },
+    { label: "Fix all current bugs", icon: "ðŸ”§" },
+    { label: "Improve mobile UX", icon: "ðŸ“±" },
+    { label: "Optimize performance", icon: "âš¡" },
+    { label: "Add dark mode toggle", icon: "ðŸŒ™" },
   ];
 
   return (
@@ -111,8 +111,8 @@ Respond as the AI Developer with production-ready code:`,
           <Code2 className="w-4 h-4 text-secondary-foreground" />
         </div>
         <div>
-          <p className="font-bold text-sm">AI Developer — Maximum Intelligence</p>
-          <p className="text-xs text-primary-foreground/60">Elite mode • Silent learning • Production-grade code</p>
+          <p className="font-bold text-sm">AI Developer â€” Maximum Intelligence</p>
+          <p className="text-xs text-primary-foreground/60">Elite mode â€¢ Silent learning â€¢ Production-grade code</p>
         </div>
         <div className="ml-auto flex items-center gap-2">
           {codeStyle.patterns.length > 0 && (

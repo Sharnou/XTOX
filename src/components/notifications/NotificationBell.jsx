@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { Bell } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { base44 } from "@/api/XTOXClient";
 
 // Simple polling bell with audible chime on new notifications.
 const CHIME_SRC =
@@ -77,3 +77,4 @@ export default function NotificationBell() {
     </button>
   );
 }
+

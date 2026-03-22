@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, MessageSquare, Heart, Globe, Menu, X } from "lucide-react";
-import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { useUserCountry } from "@/hooks/useUserCountry";
@@ -9,7 +8,7 @@ import { useUserCountry } from "@/hooks/useUserCountry";
 const COUNTRIES = ["Egypt", "UAE", "Saudi Arabia", "Kuwait", "Qatar", "Bahrain", "Oman", "Jordan", "Morocco", "USA", "UK", "France", "Germany", "Canada", "Australia"];
 
 export default function XTOXHeader({ selectedCountry, onCountryChange }) {
-  const { user } = useAuth();
+  const { user, login, logout } = useAuth();
   const { country: autoCountry } = useUserCountry();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,12 +35,15 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
     if (label === "عربي") {
       document.documentElement.lang = "ar";
       document.documentElement.dir = "rtl";
+      document.body.classList.add("rtl");
     } else if (label === "Deutsch") {
       document.documentElement.lang = "de";
       document.documentElement.dir = "ltr";
+      document.body.classList.remove("rtl");
     } else {
       document.documentElement.lang = "en";
       document.documentElement.dir = "ltr";
+      document.body.classList.remove("rtl");
     }
     localStorage.setItem("xtox_lang", label);
   };
@@ -64,7 +66,7 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
         <Link to="/" className="flex-shrink-0 flex items-center gap-2">
           <div className="text-2xl font-black tracking-tight leading-none">
-            <span className="text-secondary">▲</span>
+            <span className="text-secondary">â–²</span>
             <span className="text-primary-foreground ml-1">XTOX</span>
           </div>
         </Link>
@@ -103,8 +105,8 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
         <div className="flex items-center gap-2 ml-auto">
           <button
             onClick={cycleLang}
-            className="hidden md:flex text-xs bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition-colors"
-            title="Translate"
+            className="flex text-xs bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition-colors"
+            title="Translate page direction & language"
           >
             {lang}
           </button>
@@ -116,7 +118,7 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
               <Link to="/Messages" className="hidden md:flex p-2 hover:bg-white/10 rounded-lg transition-colors">
                 <MessageSquare className="w-5 h-5" />
               </Link>
-              <div className="hidden md:flex">
+              <div className="flex">
                 <NotificationBell />
               </div>
               <Link to="/Dashboard" className="hidden md:flex items-center gap-2 text-sm hover:bg-white/10 px-3 py-2 rounded-lg transition-colors">
@@ -125,10 +127,16 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
                 </div>
                 <span className="hidden lg:block">{user.full_name?.split(" ")[0]}</span>
               </Link>
+              <button
+                onClick={logout}
+                className="hidden md:flex text-xs bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition-colors"
+              >
+                Logout
+              </button>
             </>
           ) : (
             <button
-              onClick={() => base44.auth.redirectToLogin()}
+              onClick={() => login("demo@xtox.app", "demo")}
               className="hidden md:flex text-sm hover:bg-white/10 px-3 py-2 rounded-lg transition-colors"
             >
               Login
@@ -153,3 +161,5 @@ export default function XTOXHeader({ selectedCountry, onCountryChange }) {
     </header>
   );
 }
+
+

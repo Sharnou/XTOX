@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useEffect } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { Star } from "lucide-react";
 
 export default function SellerReviews({ sellerEmail }) {
@@ -37,7 +37,7 @@ export default function SellerReviews({ sellerEmail }) {
             <div className="flex items-center gap-2 mb-1">
               <div className="flex">
                 {r.stars === 0 ? (
-                  <span className="text-xs text-red-500 font-semibold">🚫 Blocked</span>
+                  <span className="text-xs text-red-500 font-semibold">ðŸš« Blocked</span>
                 ) : [1,2,3,4,5].map(s => (
                   <Star key={s} className={`w-3 h-3 ${s <= r.stars ? "fill-secondary text-secondary" : "text-muted-foreground/30"}`} />
                 ))}

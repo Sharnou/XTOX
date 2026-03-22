@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useEffect, useState } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { Globe, X } from "lucide-react";
 
 const BROWSER_LANG_MAP = {
-  ar: { country: "Egypt", currency: "EGP", flag: "🇪🇬" },
-  "ar-AE": { country: "UAE", currency: "AED", flag: "🇦🇪" },
-  "ar-SA": { country: "Saudi Arabia", currency: "SAR", flag: "🇸🇦" },
-  en: { country: "USA", currency: "USD", flag: "🇺🇸" },
-  "en-GB": { country: "UK", currency: "GBP", flag: "🇬🇧" },
-  fr: { country: "France", currency: "EUR", flag: "🇫🇷" },
-  de: { country: "Germany", currency: "EUR", flag: "🇩🇪" },
+  ar: { country: "Egypt", currency: "EGP", flag: "ðŸ‡ªðŸ‡¬" },
+  "ar-AE": { country: "UAE", currency: "AED", flag: "ðŸ‡¦ðŸ‡ª" },
+  "ar-SA": { country: "Saudi Arabia", currency: "SAR", flag: "ðŸ‡¸ðŸ‡¦" },
+  en: { country: "USA", currency: "USD", flag: "ðŸ‡ºðŸ‡¸" },
+  "en-GB": { country: "UK", currency: "GBP", flag: "ðŸ‡¬ðŸ‡§" },
+  fr: { country: "France", currency: "EUR", flag: "ðŸ‡«ðŸ‡·" },
+  de: { country: "Germany", currency: "EUR", flag: "ðŸ‡©ðŸ‡ª" },
 };
 
 export default function AICountryDetector({ onDetected }) {
@@ -36,7 +36,7 @@ export default function AICountryDetector({ onDetected }) {
         <p className="text-sm">
           <span className="mr-1">{detected.flag}</span>
           <span className="font-medium">Detected location: {detected.country}</span>
-          <span className="text-muted-foreground ml-1">— showing listings in {detected.currency}</span>
+          <span className="text-muted-foreground ml-1">â€” showing listings in {detected.currency}</span>
         </p>
       </div>
       <button onClick={() => setDismissed(true)} className="p-1 hover:bg-muted rounded-lg flex-shrink-0">

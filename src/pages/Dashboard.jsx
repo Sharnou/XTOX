@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useEffect } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import XTOXHeader from "@/components/layout/XTOXHeader";
@@ -54,7 +54,7 @@ export default function Dashboard() {
         // Notify seller via email
         await base44.integrations.Core.SendEmail({
           to: user.email,
-          subject: `⏰ Your XTOX ad has expired: "${ad.title}"`,
+          subject: `â° Your XTOX ad has expired: "${ad.title}"`,
           body: `Hello ${user.full_name || "there"},\n\nYour ad "${ad.title}" has expired after 30 days.\n\nYou have 10 days to reactivate it from your Dashboard, otherwise it will be permanently deleted.\n\nLogin to reactivate: https://xtox.base44.app/Dashboard\n\nBest,\nXTOX Team`
         });
       }
@@ -119,7 +119,7 @@ export default function Dashboard() {
       // Also send via email
       await base44.integrations.Core.SendEmail({
         to: user.email,
-        subject: "📦 Your XTOX Data Export",
+        subject: "ðŸ“¦ Your XTOX Data Export",
         body: `Hello ${user.full_name || "there"},\n\nYour data export has been downloaded to your device.\n\nSummary:\n- Ads: ${allAds.length}\n- Messages sent: ${allMsgs.length}\n- Reviews received: ${allReviews.length}\n- Favorites: ${allFavs.length}\n\nFor a full export with attachments, please contact support.\n\nBest,\nXTOX Team`
       });
 

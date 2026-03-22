@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useEffect } from "react";
+import { base44 } from "@/api/XTOXClient";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
 import AdsGrid from "@/components/ads/AdsGrid";
@@ -9,17 +9,17 @@ import { useUserCountry } from "@/hooks/useUserCountry";
 
 const CATEGORIES = [
   { value: "", label: "All" },
-  { value: "vehicles", label: "🚗 Vehicles" },
-  { value: "electronics", label: "📱 Electronics" },
-  { value: "real_estate", label: "🏠 Real Estate" },
-  { value: "jobs", label: "💼 Jobs" },
-  { value: "pets", label: "🐾 Pets" },
-  { value: "services", label: "🔧 Services" },
-  { value: "furniture", label: "🛋 Furniture" },
-  { value: "fashion", label: "👗 Fashion" },
-  { value: "sports", label: "⚽ Sports" },
-  { value: "books", label: "📚 Books" },
-  { value: "other", label: "📦 Other" },
+  { value: "vehicles", label: "ðŸš— Vehicles" },
+  { value: "electronics", label: "ðŸ“± Electronics" },
+  { value: "real_estate", label: "ðŸ  Real Estate" },
+  { value: "jobs", label: "ðŸ’¼ Jobs" },
+  { value: "pets", label: "ðŸ¾ Pets" },
+  { value: "services", label: "ðŸ”§ Services" },
+  { value: "furniture", label: "ðŸ›‹ Furniture" },
+  { value: "fashion", label: "ðŸ‘— Fashion" },
+  { value: "sports", label: "âš½ Sports" },
+  { value: "books", label: "ðŸ“š Books" },
+  { value: "other", label: "ðŸ“¦ Other" },
 ];
 const COUNTRIES = ["", "Egypt", "UAE", "Saudi Arabia", "Kuwait", "Qatar", "Bahrain", "Oman", "Jordan", "USA", "UK", "France", "Germany", "Canada", "Australia"];
 const SORT_OPTIONS = [
@@ -141,3 +141,4 @@ export default function Search() {
     </div>
   );
 }
+

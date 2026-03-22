@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useEffect } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 
 // Simple online presence: tracks last_seen on User entity

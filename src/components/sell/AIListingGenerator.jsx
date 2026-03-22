@@ -1,6 +1,6 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Zap, Upload, Loader2, CheckCircle, Camera } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { base44 } from "@/api/XTOXClient";
 
 export default function AIListingGenerator({ onGenerated }) {
   const [uploading, setUploading] = useState(false);
@@ -60,7 +60,7 @@ Be specific and professional.`,
         </div>
         <div>
           <h3 className="font-bold text-lg">AI Listing Generator</h3>
-          <p className="text-primary-foreground/70 text-sm">Upload a photo — AI creates your listing instantly</p>
+          <p className="text-primary-foreground/70 text-sm">Upload a photo â€” AI creates your listing instantly</p>
         </div>
       </div>
 
@@ -91,7 +91,7 @@ Be specific and professional.`,
           </div>
           <div className="bg-white/10 rounded-xl p-4 space-y-2 text-sm">
             <p><span className="text-secondary font-medium">Title:</span> {result.title}</p>
-            <p><span className="text-secondary font-medium">Category:</span> {result.category} → {result.subcategory}</p>
+            <p><span className="text-secondary font-medium">Category:</span> {result.category} â†’ {result.subcategory}</p>
             <p><span className="text-secondary font-medium">Estimated Price:</span> ${result.estimated_price_usd?.toLocaleString()} USD</p>
             <p><span className="text-secondary font-medium">Condition:</span> {result.condition}</p>
           </div>

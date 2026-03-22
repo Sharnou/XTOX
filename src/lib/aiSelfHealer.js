@@ -1,4 +1,4 @@
-/**
+﻿/**
  * XTOX AI Self-Healing & Auto-Improvement System
  * - Monitors runtime errors 24/7 in silent mode
  * - Auto-diagnoses and fixes issues via AI
@@ -6,7 +6,7 @@
  * - Continuously improves itself based on patterns found
  */
 
-import { base44 } from "@/api/base44Client";
+import { base44 } from "@/api/XTOXClient";
 
 class AISelfHealer {
   constructor() {
@@ -41,7 +41,7 @@ class AISelfHealer {
     // Start background improvement loop every 30 minutes
     this.startImprovementLoop();
 
-    console.info("[XTOX AI] Self-healing system initialized ✓");
+    console.info("[XTOX AI] Self-healing system initialized âœ“");
   }
 
   async handleError(error) {
@@ -64,14 +64,14 @@ class AISelfHealer {
         return;
       }
 
-      // Step 2: If AI is uncertain or issue is complex — search the web
+      // Step 2: If AI is uncertain or issue is complex â€” search the web
       if (!diagnosis?.is_fixable || diagnosis?.needs_web_search) {
         await this.searchForSolution(error, diagnosis);
         this.updateLog(key, "web-searched");
       }
 
     } catch {
-      // Always silent — never crash the app
+      // Always silent â€” never crash the app
     }
   }
 
@@ -201,7 +201,7 @@ Return:
   }
 }
 
-// Singleton — auto-initializes
+// Singleton â€” auto-initializes
 const aiHealer = new AISelfHealer();
 aiHealer.init();
 

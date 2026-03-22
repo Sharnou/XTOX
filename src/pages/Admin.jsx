@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
+import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
@@ -96,7 +96,7 @@ Return JSON with: summary (string), suspicious_ids (array of ad IDs), recommenda
             </div>
             <div>
               <h1 className="text-2xl font-black">Super Admin Panel</h1>
-              <p className="text-muted-foreground text-sm">Full platform control — {user?.email}</p>
+              <p className="text-muted-foreground text-sm">Full platform control â€” {user?.email}</p>
             </div>
           </div>
           <button
@@ -124,7 +124,7 @@ Return JSON with: summary (string), suspicious_ids (array of ad IDs), recommenda
               <p className="text-sm font-semibold text-orange-800 mb-2">Suspicious Ad IDs: {aiReport.suspicious_ids.join(", ")}</p>
             )}
             {aiReport.recommendations?.map((r, i) => (
-              <p key={i} className="text-xs text-orange-600 mb-1">• {r}</p>
+              <p key={i} className="text-xs text-orange-600 mb-1">â€¢ {r}</p>
             ))}
           </div>
         )}

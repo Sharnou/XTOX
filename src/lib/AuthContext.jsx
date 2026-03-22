@@ -1,5 +1,5 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+﻿import React, { createContext, useState, useContext, useEffect } from 'react';
+import { base44 } from '@/api/XTOXClient';
 
 const AuthContext = createContext();
 
@@ -12,26 +12,42 @@ export const AuthProvider = ({ children }) => {
   const [appPublicSettings, setAppPublicSettings] = useState({ id: 'local', public_settings: {} });
 
   useEffect(() => {
-    // Immediately provide a demo user so the app works without Base44 auth
     const bootstrap = async () => {
-      const [demoUser] = await base44.entities.User.list();
-      setUser(demoUser || { email: 'guest@xtox.app', full_name: 'Guest User' });
-      setIsAuthenticated(true);
-      setIsLoadingAuth(false);
+      try {
+        const me = await base44.auth.me();
+        if (me) {
+          setUser(me);
+          setIsAuthenticated(true);
+        } else {
+          const [demoUser] = await base44.entities.User.list();
+          setUser(demoUser || { email: 'guest@xtox.app', full_name: 'Guest User' });
+          setIsAuthenticated(true);
+        }
+      } catch {
+        const [demoUser] = await base44.entities.User.list();
+        setUser(demoUser || { email: 'guest@xtox.app', full_name: 'Guest User' });
+        setIsAuthenticated(true);
+      } finally {
+        setIsLoadingAuth(false);
+      }
     };
     bootstrap();
   }, []);
 
-  const logout = (shouldRedirect = true) => {
+  const login = async (email, password) => {
+    const { user: loggedIn } = await base44.auth.login(email, password);
+    setUser(loggedIn || { email: 'demo@xtox.app', full_name: 'Demo User' });
+    setIsAuthenticated(true);
+    setAuthError(null);
+  };
+
+  const logout = () => {
+    base44.auth.logout();
     setUser(null);
     setIsAuthenticated(false);
   };
 
-  const navigateToLogin = () => {
-    // In the static mock we just ensure a demo user is set
-    setUser({ email: 'demo@xtox.app', full_name: 'Demo User' });
-    setIsAuthenticated(true);
-  };
+  const navigateToLogin = () => login('demo@xtox.app', 'demo');
 
   return (
     <AuthContext.Provider value={{ 
@@ -41,6 +57,7 @@ export const AuthProvider = ({ children }) => {
       isLoadingPublicSettings,
       authError,
       appPublicSettings,
+      login,
       logout,
       navigateToLogin,
       checkAppState: () => {},
@@ -57,3 +74,4 @@ export const useAuth = () => {
   }
   return context;
 };
+

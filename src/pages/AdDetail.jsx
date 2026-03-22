@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useEffect } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useParams } from "react-router-dom";
 import XTOXHeader from "@/components/layout/XTOXHeader";
@@ -179,10 +179,10 @@ export default function AdDetail() {
                 <h4 className="font-semibold text-sm text-yellow-800">Safety Tips</h4>
               </div>
               <ul className="text-xs text-yellow-700 space-y-1">
-                <li>• Meet in a safe, public place</li>
-                <li>• Never send money in advance</li>
-                <li>• Verify the item before paying</li>
-                <li>• Report suspicious behavior</li>
+                <li>â€¢ Meet in a safe, public place</li>
+                <li>â€¢ Never send money in advance</li>
+                <li>â€¢ Verify the item before paying</li>
+                <li>â€¢ Report suspicious behavior</li>
               </ul>
             </div>
           </div>

@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+﻿import { useState, useRef } from "react";
 import { X, ImageIcon, Video, Loader2, Zap, Camera } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { base44 } from "@/api/XTOXClient";
 
 export default function MediaUploader({ images, video, onImagesChange, onVideoChange, onAIGenerated }) {
   const [uploading, setUploading] = useState(false);

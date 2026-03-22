@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useEffect, useRef } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { Send, Loader2, MessageSquare, User } from "lucide-react";
 
 export default function AdminChatInbox() {

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import { X, Star, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ export default function LeaveCommentWindow({ ad, onClose, onReviewed }) {
     if (stars >= 4) viewsDelta = 10;       // 4-5 stars: boost views
     else if (stars >= 2) viewsDelta = 2;   // 2-3 stars: slight boost
     else if (stars === 1) viewsDelta = -15; // 1 star: reduce views
-    // 0 stars: block seller — handled via status
+    // 0 stars: block seller â€” handled via status
     if (stars === 0) {
       await base44.entities.Ad.update(ad.id, { status: "blocked" });
       toast.error("Seller has been reported and blocked.");
@@ -75,7 +75,7 @@ export default function LeaveCommentWindow({ ad, onClose, onReviewed }) {
                 onMouseLeave={() => setHovered(0)}
                 className={`text-xs px-2 py-1 rounded-lg border transition-all ${stars === 0 ? "bg-red-500 text-white border-red-500" : "border-border text-muted-foreground hover:border-red-400 hover:text-red-500"}`}
               >
-                🚫 Block
+                ðŸš« Block
               </button>
               {[1, 2, 3, 4, 5].map(s => (
                 <button
@@ -95,7 +95,7 @@ export default function LeaveCommentWindow({ ad, onClose, onReviewed }) {
               <p className="text-xs text-muted-foreground mt-1.5 ml-1">{starLabels[displayStars]}</p>
             )}
             {stars === 0 && comment.trim() === "" && (
-              <p className="text-xs text-red-500 mt-1.5 ml-1">⚠ 0 stars will block this seller permanently</p>
+              <p className="text-xs text-red-500 mt-1.5 ml-1">âš  0 stars will block this seller permanently</p>
             )}
           </div>
 

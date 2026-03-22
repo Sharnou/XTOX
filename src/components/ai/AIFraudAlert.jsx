@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { Shield, AlertTriangle, CheckCircle, Loader2 } from "lucide-react";
 
 export default function AIFraudAlert({ title, description, price, category }) {
@@ -75,7 +75,7 @@ Return JSON with:
           </div>
           <p className={`text-xs ${style.text} mb-1`}>{result.verdict}</p>
           {result.flags?.map((f, i) => (
-            <p key={i} className={`text-xs ${style.text}`}>• {f}</p>
+            <p key={i} className={`text-xs ${style.text}`}>â€¢ {f}</p>
           ))}
         </div>
       )}

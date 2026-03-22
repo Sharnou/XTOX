@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { Wand2, Loader2, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function AIAdImprover({ title, description, price, category, onApply }) {
@@ -78,7 +78,7 @@ Return JSON with:
               <ul className="space-y-1">
                 {suggestions.issues.map((issue, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-orange-700">
-                    <span className="text-orange-500 mt-0.5">⚠</span> {issue}
+                    <span className="text-orange-500 mt-0.5">âš </span> {issue}
                   </li>
                 ))}
               </ul>
@@ -118,7 +118,7 @@ Return JSON with:
           {/* Price Feedback */}
           {suggestions.price_feedback && (
             <div className="bg-blue-50 rounded-xl px-3 py-2 text-sm text-blue-700">
-              💰 {suggestions.price_feedback}
+              ðŸ’° {suggestions.price_feedback}
             </div>
           )}
 

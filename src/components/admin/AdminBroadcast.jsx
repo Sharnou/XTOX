@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { Send, Users, CheckCircle, Loader2 } from "lucide-react";
 
 export default function AdminBroadcast({ users }) {

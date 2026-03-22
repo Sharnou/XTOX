@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+﻿import { useState, useEffect } from "react";
+import { base44 } from "@/api/XTOXClient";
 import { useAuth } from "@/lib/AuthContext";
 import XTOXHeader from "@/components/layout/XTOXHeader";
 import XTOXFooter from "@/components/layout/XTOXFooter";
@@ -45,7 +45,7 @@ export default function Favorites() {
             <Heart className="w-16 h-16 mx-auto mb-4 opacity-20" />
             <p className="text-lg font-medium">No favorites yet</p>
             <p className="text-sm mb-4">Save listings you like by tapping the heart icon</p>
-            <Link to="/Home" className="text-primary text-sm hover:underline">Browse listings →</Link>
+            <Link to="/Home" className="text-primary text-sm hover:underline">Browse listings â†’</Link>
           </div>
         ) : (
           <AdsGrid ads={ads} isLoading={loading} />

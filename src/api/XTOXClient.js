@@ -1,5 +1,40 @@
-// Lightweight local mock of the Base44 client so the app can run entirely static
-// without calling Base44 services or requiring sign-in. Data is kept in-memory.
+// Unified XTOX client: tries real API first, falls back to local mock.
+// Keeps the original mock data but layers REST calls on top so the UI works in both modes.
+
+// API base; leave empty on static GitHub Pages to force mock usage.
+const API_URL = import.meta.env.VITE_API_URL || "";
+const tokenKey = "xtox_token";
+
+const getToken = () => (typeof localStorage !== "undefined" ? localStorage.getItem(tokenKey) : null);
+const setToken = (val) => {
+  if (typeof localStorage === "undefined") return;
+  if (val) localStorage.setItem(tokenKey, val);
+  else localStorage.removeItem(tokenKey);
+};
+
+async function api(path, { method = "GET", body } = {}) {
+  if (!API_URL) throw new Error("API_URL not set");
+  const headers = { "Content-Type": "application/json" };
+  const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const res = await fetch(`${API_URL}${path}`, {
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
+}
+
+const safe = async (fn, fallback) => {
+  if (!API_URL) return typeof fallback === "function" ? fallback() : fallback;
+  try {
+    return await fn();
+  } catch (err) {
+    console.warn("[XTOXClient] falling back to mock:", err.message);
+    return typeof fallback === "function" ? fallback() : fallback;
+  }
+};
 
 const uuid = () => crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
 
@@ -116,7 +151,8 @@ const makeEntity = (store) => ({
 
 const noop = async () => {};
 
-export const base44 = {
+// Mock client used when API is unreachable
+const mock = {
   entities: {
     Ad: makeEntity(demoAds),
     Favorite: makeEntity(demoFavorites),
@@ -129,18 +165,133 @@ export const base44 = {
   auth: {
     me: async () => null,
     updateMe: noop,
-    logout: noop,
+    login: async () => ({ token: null, user: null }),
+    register: async () => ({ token: null, user: null }),
+    logout: () => { setToken(null); return Promise.resolve(); },
     redirectToLogin: () => {},
   },
   integrations: {
     Core: {
-      InvokeLLM: async ({ prompt }) => ({
-        text: `Mocked response for: ${prompt?.slice(0, 60) ?? "N/A"}`,
-      }),
+      // Provide structured mock responses so UI flows behave realistically.
+      InvokeLLM: async ({ prompt, response_json_schema }) => {
+        if (response_json_schema?.properties?.approved) return { approved: true, reason: "" };
+        if (response_json_schema?.properties?.keywords) return { keywords: "classifieds, listing, buy, sell, marketplace" };
+        return { text: `Mocked response for: ${prompt?.slice(0, 60) ?? "N/A"}` };
+      },
       UploadFile: async () => ({
         file_url: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=800",
       }),
       SendEmail: async () => ({ status: "sent" }),
+    },
+  },
+};
+
+// Unified client with API-first, mock fallback
+export const base44 = {
+  entities: {
+    Ad: {
+      list: (sort, limit) => safe(() => api(`/ads?status=active&limit=${limit || 100}`), () => mock.entities.Ad.list(sort, limit)),
+      filter: (filter = {}, sort, limit) => {
+        const qs = new URLSearchParams({ ...filter, limit: limit || 100 }).toString();
+        return safe(() => api(`/ads?${qs}`), () => mock.entities.Ad.filter(filter, sort, limit));
+      },
+      create: (data) => safe(() => api("/ads", { method: "POST", body: data }), () => mock.entities.Ad.create(data)),
+      update: (id, patch) => safe(() => api(`/ads/${id}`, { method: "PATCH", body: patch }), () => mock.entities.Ad.update(id, patch)),
+      delete: (id) => safe(() => api(`/ads/${id}`, { method: "DELETE" }), () => mock.entities.Ad.delete(id)),
+    },
+    Favorite: {
+      list: () => safe(() => api("/favorites"), () => mock.entities.Favorite.list()),
+      filter: (filter) =>
+        safe(
+          async () => {
+            const favs = await api("/favorites");
+            return filter ? favs.filter((f) => Object.entries(filter).every(([k, v]) => f[k] === v)) : favs;
+          },
+          () => mock.entities.Favorite.filter(filter)
+        ),
+      create: (data) => safe(() => api("/favorites", { method: "POST", body: data }), () => mock.entities.Favorite.create(data)),
+      delete: (id) => safe(() => api(`/favorites/${id}`, { method: "DELETE" }), () => mock.entities.Favorite.delete(id)),
+    },
+    Message: {
+      filter: (filter) => {
+        const conversation = filter?.ad_id || filter?.conversation;
+        if (!conversation) return Promise.resolve([]);
+        return safe(() => api(`/Chat/${conversation}`), () => mock.entities.Message.filter(filter));
+      },
+      create: (data) => {
+        const body = {
+          conversation: data.ad_id || data.conversation,
+          to: data.receiver_email,
+          body: data.content,
+          image: data.type === "image" ? data.content : undefined,
+        };
+        return safe(() => api("/Chat", { method: "POST", body }), () => mock.entities.Message.create(data));
+      },
+    },
+    Notification: {
+      list: (sort, limit) => safe(() => api(`/notifications?limit=${limit || 10}`), () => mock.entities.Notification.list(sort, limit)),
+    },
+    User: {
+      list: () => safe(() => api("/auth/users"), () => mock.entities.User.list()),
+    },
+  },
+  auth: {
+    me: () => safe(() => api("/auth/me"), () => mock.auth.me()),
+    updateMe: () => Promise.resolve(),
+    login: (email, password) =>
+      safe(
+        async () => {
+          const { token, user } = await api("/auth/login", { method: "POST", body: { email, password } });
+          setToken(token);
+          return { token, user };
+        },
+        async () => {
+          const demo = (await mock.entities.User.list())[0];
+          return { token: null, user: demo };
+        }
+      ),
+    register: (email, password, full_name) =>
+      safe(async () => api("/auth/register", { method: "POST", body: { email, password, full_name } }), async () => {
+        const demo = (await mock.entities.User.list())[0];
+        return { token: null, user: demo };
+      }),
+    logout: () => {
+      setToken(null);
+      return Promise.resolve();
+    },
+    redirectToLogin: () => {},
+    setToken,
+  },
+  integrations: {
+    Core: {
+      InvokeLLM: async (payload) => {
+        if (payload?.task === "translate") {
+          return safe(
+            () =>
+              api("/ai/translate", {
+                method: "POST",
+                body: {
+                  title: payload.title,
+                  description: payload.description,
+                  target_lang: payload.target_lang || "ar",
+                },
+              }),
+            () => ({
+              translated_title: `[${payload.target_lang || "ar"}] ${payload.title || ""}`,
+              translated_description: `[${payload.target_lang || "ar"}] ${payload.description || ""}`,
+            })
+          );
+        }
+        if (payload?.response_json_schema?.properties?.approved) {
+          return safe(
+            () => api("/ai/moderate", { method: "POST", body: { title: payload.title, description: payload.description } }),
+            () => ({ approved: true, reason: "" })
+          );
+        }
+        return mock.integrations.Core.InvokeLLM(payload);
+      },
+      UploadFile: (args) => mock.integrations.Core.UploadFile(args),
+      SendEmail: (args) => mock.integrations.Core.SendEmail(args),
     },
   },
 };

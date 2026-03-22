@@ -1,5 +1,5 @@
-import { Shield, Star, Trash2, Eye, Check, X } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+﻿import { Shield, Star, Trash2, Eye, Check, X } from "lucide-react";
+import { base44 } from "@/api/XTOXClient";
 
 export default function AdminAdRow({ ad, onUpdate }) {
   const updateAd = async (data) => {
@@ -43,7 +43,7 @@ export default function AdminAdRow({ ad, onUpdate }) {
       </td>
       <td className="py-3 px-4">
         <span className={`text-xs px-2 py-1 rounded-full ${ad.is_featured ? "bg-yellow-100 text-yellow-700" : "bg-muted text-muted-foreground"}`}>
-          {ad.is_featured ? "⭐ Featured" : "Standard"}
+          {ad.is_featured ? "â­ Featured" : "Standard"}
         </span>
       </td>
       <td className="py-3 px-4">
