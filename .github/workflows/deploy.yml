@@ -29,8 +29,8 @@ jobs:
         with:
           node-version: 24
 
-      - name: Install deps (no lockfile)
-        run: npm install --no-fund --no-audit --ignore-scripts --package-lock=false
+      - name: Install deps
+        run: npm ci --no-fund --no-audit
 
       - name: Build
         run: npm run build
