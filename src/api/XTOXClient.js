@@ -288,6 +288,32 @@ export const base44 = {
             () => ({ approved: true, reason: "" })
           );
         }
+        // AI self-healer: return structured defaults to avoid hangs in static mode
+        const props = payload?.response_json_schema?.properties || {};
+        if (props.is_fixable || props.needs_web_search || props.fix_description) {
+          return {
+            is_fixable: true,
+            needs_web_search: false,
+            fix_description: "Mock: restart component to clear transient error",
+            severity: "low",
+            root_cause: "Mock environment (no backend) triggered a benign error",
+          };
+        }
+        if (props.root_cause || props.solution || props.code_example) {
+          return {
+            root_cause: "Mock: placeholder root cause",
+            solution: "Mock: no-op fix in static mode",
+            code_example: "// mock code example",
+            prevention: "Handle errors gracefully in UI when API is offline.",
+          };
+        }
+        if (props.patterns || props.improvement_suggestions || props.health_score) {
+          return {
+            patterns: ["Mock pattern: missing API_URL"],
+            improvement_suggestions: ["Use mock client when API unavailable"],
+            health_score: 85,
+          };
+        }
         return mock.integrations.Core.InvokeLLM(payload);
       },
       UploadFile: (args) => mock.integrations.Core.UploadFile(args),

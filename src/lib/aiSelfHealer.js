@@ -201,8 +201,11 @@ Return:
   }
 }
 
-// Singleton â€” auto-initializes
+// Singleton — auto-initializes and exposed for debugging
 const aiHealer = new AISelfHealer();
 aiHealer.init();
+if (typeof window !== "undefined") {
+  window.aiHealer = aiHealer;
+}
 
 export { aiHealer };
